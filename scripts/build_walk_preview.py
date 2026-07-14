@@ -9,6 +9,7 @@ FRAME_HEIGHT = 96
 GRID_COLUMNS = 4
 GRID_ROWS = 2
 FRAME_COUNT = 8
+PREVIEW_SCALE = 4
 
 
 def _extract_frames(source: Image.Image) -> list[Image.Image]:
@@ -80,7 +81,11 @@ def build_walk_preview(source: Path, strip_out: Path, gif_out: Path) -> None:
     gif_out.parent.mkdir(parents=True, exist_ok=True)
     strip.save(strip_out)
 
-    gif_frames = [_gif_frame(frame) for frame in frames]
+    preview_size = (FRAME_WIDTH * PREVIEW_SCALE, FRAME_HEIGHT * PREVIEW_SCALE)
+    gif_frames = [
+        _gif_frame(frame.resize(preview_size, Image.Resampling.NEAREST))
+        for frame in frames
+    ]
     gif_frames[0].save(
         gif_out,
         save_all=True,

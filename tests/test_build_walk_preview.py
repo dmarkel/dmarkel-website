@@ -48,6 +48,7 @@ class BuildWalkPreviewTests(unittest.TestCase):
                 self.assertEqual(sampled, [color[:3] for color in colors])
 
             with Image.open(preview) as animation:
+                self.assertEqual(animation.size, (256, 384))
                 self.assertEqual(animation.n_frames, 8)
                 self.assertEqual(animation.info.get("loop"), 0)
                 self.assertEqual(animation.info.get("duration"), 100)
