@@ -19,4 +19,14 @@ export const SPRITES = Object.freeze({
   idleFrame: 2
 });
 
+export const PARALLAX_LAYERS = Object.freeze([
+  { name: "sky", path: "assets/backgrounds/houston/layer-01-sky.png", factor: 0.02 },
+  { name: "clouds", path: "assets/backgrounds/houston/layer-02-clouds.png", factor: 0.10 },
+  { name: "far", path: "assets/backgrounds/houston/layer-03-far-landmarks.png", factor: 0.24 },
+  { name: "architecture", path: "assets/backgrounds/houston/layer-04-primary-architecture.png", factor: 0.48 },
+  { name: "environment", path: "assets/backgrounds/houston/layer-05-near-environment.png", factor: 0.70 },
+  { name: "accents", path: "assets/backgrounds/houston/layer-06-foreground-accents.png", factor: 0.86 },
+  { name: "ground", path: "assets/backgrounds/houston/layer-07-ground.png", factor: 1.00 },
+]);
+
 export const FIXED_STEP = 1 / 60;

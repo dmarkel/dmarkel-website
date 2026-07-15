@@ -118,8 +118,7 @@ kbd {
 }
 
 .status[hidden] {
-  display: block;
-  opacity: 0;
+  display: none;
 }
 
 .status.is-error {

@@ -1,5 +1,6 @@
-import { FIXED_STEP, SPRITES } from "./config.js";
+import { FIXED_STEP, PARALLAX_LAYERS, SPRITES } from "./config.js";
 import { createInput } from "./input.js";
+import { createCamera, layerGeometry, stepCamera, worldWidthFor } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import { applyViewport, readViewport } from "./viewport.js";
 
@@ -17,13 +18,17 @@ const input = createInput({
 
 const imagePaths = {
   walk: "assets/avatar/avatar-walk-right.png",
-  jump: "assets/avatar/avatar-jump-right.png"
+  jump: "assets/avatar/avatar-jump-right.png",
+  ...Object.fromEntries(PARALLAX_LAYERS.map(({ name, path }) => [name, path])),
 };
 
-let world = { width: 0, height: 0, floorY: 0 };
+let viewport = { width: 0, height: 0 };
+let world = { width: 0, floorY: 0 };
 let scale = 2;
 let player = null;
 let previousPlayer = null;
+let camera = createCamera();
+let previousCamera = createCamera();
 let lastTime = 0;
 let accumulator = 0;
 let pendingJump = false;
@@ -39,12 +44,11 @@ function loadImage(source) {
 }
 
 function resize() {
-  const oldWidth = world.width;
   const oldFloor = world.floorY;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const viewport = readViewport(window);
-  const { width, height } = viewport;
-  applyViewport(stage, viewport);
+  const nextViewport = readViewport(window);
+  const { width, height } = nextViewport;
+  applyViewport(stage, nextViewport);
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   canvas.style.width = `${width}px`;
@@ -52,11 +56,8 @@ function resize() {
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
   context.imageSmoothingEnabled = false;
 
-  world = {
-    width,
-    height,
-    floorY: height - Math.max(64, height * 0.09)
-  };
+  viewport = nextViewport;
+  world = { width: worldWidthFor(width), floorY: height * (700 / 825) };
   scale = Math.max(1.5, Math.min(2.5, Math.min(width / 430, height / 310)));
 
   if (!player) {
@@ -70,11 +71,10 @@ function resize() {
       grounded: true
     });
   } else {
-    const centerRatio = oldWidth > 0 ? (player.x + player.width / 2) / oldWidth : 0.18;
     const wasGrounded = player.grounded || Math.abs((player.y + player.height) - oldFloor) < 2;
     player.width = SPRITES.cellWidth * scale;
     player.height = SPRITES.cellHeight * scale;
-    player.x = Math.max(0, Math.min(width - player.width, centerRatio * width - player.width / 2));
+    player.x = Math.max(0, Math.min(world.width - player.width, player.x));
     if (wasGrounded) {
       player.y = world.floorY - player.height;
       player.vy = 0;
@@ -84,49 +84,25 @@ function resize() {
     }
   }
   previousPlayer = { ...player };
+  camera = stepCamera(camera, player.x + player.width / 2, width, world.width, 1);
+  previousCamera = { ...camera };
 }
 
-function drawStage() {
-  const { width, height, floorY } = world;
-  const sky = context.createLinearGradient(0, 0, 0, height);
-  sky.addColorStop(0, "#14363d");
-  sky.addColorStop(0.58, "#2d5a61");
-  sky.addColorStop(1, "#8ca9a0");
-  context.fillStyle = sky;
-  context.fillRect(0, 0, width, height);
-
-  context.fillStyle = "rgba(244, 234, 215, 0.055)";
-  for (let x = -40; x < width + 80; x += 94) {
-    context.fillRect(x, floorY - 42, 58, 2);
+function drawParallax(images, cameraX) {
+  context.fillStyle = "#8ed6f0";
+  context.fillRect(0, 0, viewport.width, viewport.height);
+  for (const layer of PARALLAX_LAYERS) {
+    const geometry = layerGeometry(cameraX, viewport.width, world.width, layer.factor);
+    context.drawImage(images[layer.name], geometry.x, 0, geometry.width, viewport.height);
   }
-
-  const glow = context.createRadialGradient(width * 0.82, height * 0.22, 0, width * 0.82, height * 0.22, Math.min(width, height) * 0.24);
-  glow.addColorStop(0, "rgba(231, 111, 71, 0.24)");
-  glow.addColorStop(1, "rgba(231, 111, 71, 0)");
-  context.fillStyle = glow;
-  context.fillRect(0, 0, width, height);
-
-  context.fillStyle = "#b8a37d";
-  context.fillRect(0, floorY, width, height - floorY);
-  context.fillStyle = "#e1c998";
-  context.fillRect(0, floorY, width, 5);
-  context.fillStyle = "rgba(9, 29, 34, 0.2)";
-  context.fillRect(0, floorY + 12, width, 2);
-
-  context.strokeStyle = "rgba(9, 29, 34, 0.22)";
-  context.lineWidth = 1;
-  context.beginPath();
-  for (let x = -50; x < width + 80; x += 84) {
-    context.moveTo(x, floorY + 14);
-    context.lineTo(x + 46, height);
-  }
-  context.stroke();
 }
 
 function drawPlayer(images, alpha) {
   const animation = selectAnimation(player);
   const image = images[animation.sheet];
-  const drawX = previousPlayer.x + (player.x - previousPlayer.x) * alpha;
+  const cameraX = previousCamera.x + (camera.x - previousCamera.x) * alpha;
+  const worldX = previousPlayer.x + (player.x - previousPlayer.x) * alpha;
+  const drawX = worldX - cameraX;
   const drawY = previousPlayer.y + (player.y - previousPlayer.y) * alpha;
   const sourceX = animation.frame * SPRITES.cellWidth;
   const shadowWidth = player.width * (player.grounded ? 0.54 : 0.34);
@@ -170,16 +146,26 @@ function start(images) {
 
     while (accumulator >= FIXED_STEP) {
       previousPlayer = { ...player };
+      previousCamera = { ...camera };
       player = stepPlayer(player, {
         move: frameInput.move,
         jumpPressed: pendingJump
       }, FIXED_STEP, world);
+      camera = stepCamera(
+        camera,
+        player.x + player.width / 2,
+        viewport.width,
+        world.width,
+        FIXED_STEP,
+      );
       pendingJump = false;
       accumulator -= FIXED_STEP;
     }
 
-    drawStage();
-    drawPlayer(images, accumulator / FIXED_STEP);
+    const alpha = accumulator / FIXED_STEP;
+    const cameraX = previousCamera.x + (camera.x - previousCamera.x) * alpha;
+    drawParallax(images, cameraX);
+    drawPlayer(images, alpha);
     requestAnimationFrame(frame);
   }
 
