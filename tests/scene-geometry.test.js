@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { layerTransform, sceneScale, sceneWorld } from "../src/scene-geometry.js";
+import {
+  layerPanelTransforms,
+  layerTransform,
+  sceneScale,
+  sceneWorld,
+} from "../src/scene-geometry.js";
 
 
 test("scene scaling is uniform and never shrinks proof art", () => {
@@ -30,4 +35,41 @@ test("layer transform anchors the ground and applies restrained travel", () => {
       scaleY: 1,
     },
   );
+});
+
+test("panel transforms stay contiguous and uniformly scaled", () => {
+  const transforms = layerPanelTransforms(
+    1000,
+    390,
+    7624,
+    0.38,
+    1906,
+    825,
+    2,
+    1,
+    665,
+    332,
+  );
+
+  assert.equal(transforms.length, 2);
+  assert.equal(transforms[0].x, -380);
+  assert.equal(transforms[1].x, 1526);
+  assert.equal(transforms[0].scaleX, transforms[0].scaleY);
+});
+
+test("approved panel counts cover the narrowest layer at the world endpoint", () => {
+  const far = layerPanelTransforms(
+    6780,
+    844,
+    7624,
+    0.12,
+    1906,
+    825,
+    2,
+    1,
+    665,
+    332,
+  );
+
+  assert.ok(far[1].x + far[1].width >= 844);
 });

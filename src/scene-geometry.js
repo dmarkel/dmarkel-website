@@ -34,3 +34,31 @@ export function layerTransform(
     scaleY: scale,
   };
 }
+
+export function layerPanelTransforms(
+  cameraX,
+  viewportWidth,
+  worldWidth,
+  factor,
+  panelWidth,
+  panelHeight,
+  panelCount,
+  scale,
+  groundLine,
+  floorY,
+) {
+  const maxCamera = Math.max(0, worldWidth - viewportWidth);
+  const safeCamera = Math.max(0, Math.min(maxCamera, cameraX));
+  const width = panelWidth * scale;
+  const height = panelHeight * scale;
+  const originX = -safeCamera * factor;
+
+  return Array.from({ length: panelCount }, (_, index) => ({
+    x: originX + index * width,
+    y: floorY - groundLine * scale,
+    width,
+    height,
+    scaleX: scale,
+    scaleY: scale,
+  }));
+}
