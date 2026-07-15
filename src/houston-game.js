@@ -5,7 +5,7 @@ import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import { layerPanelTransforms, sceneWorld } from "./scene-geometry.js";
 import { applyViewport, readViewport } from "./viewport.js";
 
-const ART = Object.freeze({ width: 1906, height: 825, groundLine: 665 });
+const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
 const CHAPTER_LAYERS = Object.freeze([
   {
     name: "far",
@@ -28,7 +28,7 @@ const CHAPTER_LAYERS = Object.freeze([
     paths: [
       "assets/backgrounds/houston-chapter/foreground-01-v3.png",
       "assets/backgrounds/houston-chapter/foreground-02-v3.png",
-      "assets/backgrounds/houston-chapter/foreground-03-v3.png",
+      "assets/backgrounds/houston-chapter/foreground-03-v4.png",
       "assets/backgrounds/houston-chapter/foreground-04-v3.png",
     ],
     factor: 1,
