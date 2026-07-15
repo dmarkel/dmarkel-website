@@ -27,9 +27,9 @@ const CHAPTER_LAYERS = Object.freeze([
     name: "foreground",
     paths: [
       "assets/backgrounds/houston-proof/foreground.png",
-      "assets/backgrounds/houston-chapter/foreground-02.png",
-      "assets/backgrounds/houston-chapter/foreground-03.png",
-      "assets/backgrounds/houston-chapter/foreground-04.png",
+      "assets/backgrounds/houston-chapter/foreground-02-v2.png",
+      "assets/backgrounds/houston-chapter/foreground-03-v2.png",
+      "assets/backgrounds/houston-chapter/foreground-04-v2.png",
     ],
     factor: 1,
   },
