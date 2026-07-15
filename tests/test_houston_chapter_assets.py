@@ -20,6 +20,12 @@ REPAIRED_FOREGROUND = [
     CHAPTER / "foreground-03-v2.png",
     CHAPTER / "foreground-04-v2.png",
 ]
+EDGE_SAFE_FOREGROUND = [
+    CHAPTER / "foreground-01-v3.png",
+    CHAPTER / "foreground-02-v3.png",
+    CHAPTER / "foreground-03-v3.png",
+    CHAPTER / "foreground-04-v3.png",
+]
 
 
 def opaque_ratio(image, box):
@@ -83,6 +89,43 @@ class HoustonChapterAssetTests(unittest.TestCase):
         panel_four = Image.open(REPAIRED_FOREGROUND[2]).convert("RGBA")
         self.assertLess(opaque_ratio(panel_three, (1858, 300, 1906, 640)), 0.25)
         self.assertLess(opaque_ratio(panel_four, (0, 300, 48, 640)), 0.25)
+
+    def test_edge_safe_foregrounds_share_the_approved_frame(self):
+        for path in EDGE_SAFE_FOREGROUND:
+            with Image.open(path) as image:
+                self.assertEqual(image.size, (1906, 825), path.name)
+
+    def test_edge_safe_foregrounds_have_solid_walkable_ground(self):
+        for path in EDGE_SAFE_FOREGROUND:
+            image = Image.open(path).convert("RGBA")
+            for x in range(image.width):
+                self.assertTrue(
+                    all(image.getpixel((x, y))[3] > 240 for y in range(665, 825)),
+                    f"{path.name} has transparent ground at x={x}",
+                )
+
+    def test_first_boundary_keeps_large_objects_out_of_edge_zones(self):
+        panel_one = Image.open(EDGE_SAFE_FOREGROUND[0]).convert("RGBA")
+        panel_two = Image.open(EDGE_SAFE_FOREGROUND[1]).convert("RGBA")
+        self.assertLess(opaque_ratio(panel_one, (1810, 0, 1906, 610)), 0.25)
+        self.assertLess(opaque_ratio(panel_two, (0, 0, 96, 610)), 0.25)
+
+    def test_second_boundary_keeps_large_objects_out_of_edge_zones(self):
+        panel_two = Image.open(EDGE_SAFE_FOREGROUND[1]).convert("RGBA")
+        panel_three = Image.open(EDGE_SAFE_FOREGROUND[2]).convert("RGBA")
+        self.assertLess(opaque_ratio(panel_two, (1810, 0, 1906, 610)), 0.25)
+        self.assertLess(opaque_ratio(panel_three, (0, 0, 96, 610)), 0.25)
+
+    def test_third_panel_has_no_elevated_foreground_freeway_mass(self):
+        panel_three = Image.open(EDGE_SAFE_FOREGROUND[2]).convert("RGBA")
+        self.assertLess(opaque_ratio(panel_three, (850, 280, 1500, 590)), 0.18)
+
+    def test_terminal_decoration_has_no_large_partial_alpha_mass(self):
+        panel_four = Image.open(EDGE_SAFE_FOREGROUND[3]).convert("RGBA")
+        alpha = panel_four.crop((1600, 320, 1835, 665)).getchannel("A")
+        values = list(alpha.getdata())
+        partial_ratio = sum(0 < value < 255 for value in values) / len(values)
+        self.assertLess(partial_ratio, 0.02)
 
 
 if __name__ == "__main__":
