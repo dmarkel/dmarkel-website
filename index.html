@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#091d22">
+    <title>David — Avatar Movement Study</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="stage" aria-label="Playable pixel avatar movement study">
+      <canvas id="game" aria-label="A pixel character you can walk and jump"></canvas>
+
+      <header class="masthead">
+        <p class="eyebrow">Movement study · 01</p>
+        <h1>Walk a little.</h1>
+      </header>
+
+      <aside id="instructions" class="instructions" aria-label="Controls">
+        <span><kbd>←</kbd><kbd>→</kbd> walk</span>
+        <span><kbd>space</kbd> jump</span>
+      </aside>
+
+      <div id="status" class="status" role="status" aria-live="polite">Preparing the character…</div>
+
+      <div class="touch-controls" aria-label="Touch controls">
+        <button id="joystick" class="joystick" type="button" aria-label="Move left or right">
+          <span class="joystick-track" aria-hidden="true"></span>
+          <span id="joystick-knob" class="joystick-knob" aria-hidden="true"></span>
+        </button>
+        <button id="jump-button" class="jump-button" type="button" aria-label="Jump">
+          <span aria-hidden="true">↑</span>
+          <small>jump</small>
+        </button>
+      </div>
+    </main>
+    <script type="module" src="src/game.js"></script>
+  </body>
+</html>
