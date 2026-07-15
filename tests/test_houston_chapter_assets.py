@@ -26,6 +26,7 @@ EDGE_SAFE_FOREGROUND = [
     CHAPTER / "foreground-03-v3.png",
     CHAPTER / "foreground-04-v3.png",
 ]
+MIDDLE_REBUILD = CHAPTER / "foreground-03-v4.png"
 
 
 def opaque_ratio(image, box):
@@ -126,6 +127,44 @@ class HoustonChapterAssetTests(unittest.TestCase):
         values = list(alpha.getdata())
         partial_ratio = sum(0 < value < 255 for value in values) / len(values)
         self.assertLess(partial_ratio, 0.02)
+
+    def test_middle_rebuild_has_approved_frame(self):
+        with Image.open(MIDDLE_REBUILD) as image:
+            self.assertEqual(image.size, (1906, 825))
+
+    def test_middle_rebuild_has_solid_walkable_ground(self):
+        image = Image.open(MIDDLE_REBUILD).convert("RGBA")
+        self.assertTrue(
+            all(
+                image.getpixel((x, y))[3] > 240
+                for x in range(1906)
+                for y in range(665, 825)
+            )
+        )
+
+    def test_middle_rebuild_has_no_overhead_sign(self):
+        image = Image.open(MIDDLE_REBUILD).convert("RGBA")
+        self.assertLess(opaque_ratio(image, (350, 120, 1100, 360)), 0.04)
+
+    def test_middle_rebuild_has_no_empty_center_runs(self):
+        image = Image.open(MIDDLE_REBUILD).convert("RGBA")
+        for left in range(96, 1810, 160):
+            with self.subTest(left=left):
+                self.assertGreater(
+                    opaque_ratio(image, (left, 500, min(left + 160, 1810), 665)),
+                    0.12,
+                )
+
+    def test_middle_rebuild_limits_partial_alpha_damage(self):
+        alpha = (
+            Image.open(MIDDLE_REBUILD)
+            .convert("RGBA")
+            .crop((96, 500, 1810, 665))
+            .getchannel("A")
+        )
+        visible = [value for value in alpha.getdata() if value > 0]
+        self.assertTrue(visible)
+        self.assertLess(sum(value < 255 for value in visible) / len(visible), 0.03)
 
 
 if __name__ == "__main__":
