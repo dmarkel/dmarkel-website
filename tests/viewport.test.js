@@ -10,7 +10,8 @@ test("visual viewport wins when mobile browser chrome changes the visible area",
       width: 780.4,
       height: 352.6,
       offsetLeft: 11.5,
-      offsetTop: 7.25
+      offsetTop: 7.25,
+      scale: 1.25
     }
   });
 
@@ -29,6 +30,24 @@ test("window dimensions remain the fallback when VisualViewport is unavailable",
     offsetLeft: 0,
     offsetTop: 0
   });
+});
+
+test("stale visual width cannot crop an unzoomed portrait layout after rotation", () => {
+  const metrics = readViewport({
+    innerWidth: 393,
+    innerHeight: 730,
+    document: { documentElement: { clientWidth: 393 } },
+    visualViewport: {
+      width: 308,
+      height: 730,
+      offsetLeft: 0,
+      offsetTop: 0,
+      scale: 1
+    }
+  });
+
+  assert.equal(metrics.width, 393);
+  assert.equal(metrics.height, 730);
 });
 
 test("stage is pinned to the measured visible viewport", () => {
