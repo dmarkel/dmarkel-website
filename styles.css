@@ -252,3 +252,14 @@ kbd {
     transition: none;
   }
 }
+
+.proof-stage .masthead {
+  max-width: min(620px, calc(100vw - 44px));
+}
+
+@media (max-width: 560px) {
+  .proof-stage h1 {
+    max-width: 250px;
+    font-size: 25px;
+  }
+}
