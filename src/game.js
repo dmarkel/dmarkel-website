@@ -1,7 +1,9 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
 import { createInput } from "./input.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
+import { applyViewport, readViewport } from "./viewport.js";
 
+const stage = document.querySelector(".stage");
 const canvas = document.querySelector("#game");
 const context = canvas.getContext("2d", { alpha: false });
 const status = document.querySelector("#status");
@@ -40,8 +42,9 @@ function resize() {
   const oldWidth = world.width;
   const oldFloor = world.floorY;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+  const viewport = readViewport(window);
+  const { width, height } = viewport;
+  applyViewport(stage, viewport);
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   canvas.style.width = `${width}px`;
@@ -183,7 +186,19 @@ function start(images) {
   requestAnimationFrame(frame);
 }
 
-window.addEventListener("resize", resize);
+let resizeFrame = null;
+function scheduleResize() {
+  if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = null;
+    resize();
+  });
+}
+
+window.addEventListener("resize", scheduleResize, { passive: true });
+window.addEventListener("orientationchange", scheduleResize, { passive: true });
+window.visualViewport?.addEventListener("resize", scheduleResize, { passive: true });
+window.visualViewport?.addEventListener("scroll", scheduleResize, { passive: true });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     input.reset();
