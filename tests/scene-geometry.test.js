@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  endpointAlignedFactor,
   layerPanelTransforms,
   layerTransform,
   sceneScale,
@@ -18,6 +19,12 @@ test("scene scaling is uniform and never shrinks proof art", () => {
 test("scene floor keeps the art flush with the bottom in portrait", () => {
   assert.equal(sceneFloor(844, 825, 735, 1), 754);
   assert.equal(sceneFloor(390, 825, 735, 1), 331.5);
+});
+
+test("endpoint factor exposes the complete layer without stretching", () => {
+  assert.equal(endpointAlignedFactor(3812, 390, 7624), (3812 - 390) / (7624 - 390));
+  assert.equal(endpointAlignedFactor(3812, 844, 7624), (3812 - 844) / (7624 - 844));
+  assert.equal(endpointAlignedFactor(390, 390, 7624), 0);
 });
 
 test("world dimensions preserve the source aspect ratio", () => {

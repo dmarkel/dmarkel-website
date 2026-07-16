@@ -8,6 +8,13 @@ export function sceneFloor(viewportHeight, artHeight, groundLine, scale) {
   return Math.max(familiarFloor, flushFloor);
 }
 
+export function endpointAlignedFactor(layerWidth, viewportWidth, worldWidth) {
+  const worldTravel = Math.max(0, worldWidth - viewportWidth);
+  if (worldTravel === 0) return 0;
+  const layerTravel = Math.max(0, layerWidth - viewportWidth);
+  return Math.max(0, Math.min(1, layerTravel / worldTravel));
+}
+
 export function sceneWorld(artWidth, artHeight, viewportHeight, groundLine) {
   const scale = sceneScale(viewportHeight, artHeight);
   return {

@@ -2,6 +2,8 @@ import { expandFenceRun } from "./modular-foreground.js";
 
 const ROOT = "assets/backgrounds/houston-modular";
 
+export const GROUND_PLANES = Object.freeze({ back: 665, walk: 735 });
+
 export const GROUND = Object.freeze({
   path: `${ROOT}/ground-tile.png`,
   width: 400,
@@ -29,20 +31,20 @@ export const ASSETS = Object.freeze({
 export const OLD_BOUNDARIES = Object.freeze([1906, 3812, 5718]);
 
 export const FENCE_RUNS = Object.freeze([
-  { id: "lamar", type: "iron", startX: 80, endX: 3200, gateX: 760, groundY: 665 },
-  { id: "airport", type: "chain", startX: 4700, endX: 6250, groundY: 665 },
+  { id: "lamar", type: "iron", startX: 80, endX: 3200, gateX: 760, plane: "back" },
+  { id: "airport", type: "chain", startX: 4700, endX: 6250, plane: "back" },
 ]);
 
 export const PROPS = Object.freeze([
-  { id: "open-planter-a", assetId: "planter", x: 3300, groundY: 665 },
-  { id: "open-lamp-a", assetId: "street-lamp", x: 3430, groundY: 665 },
-  { id: "open-bench", assetId: "bench", x: 3600, groundY: 665 },
-  { id: "open-lamp-b", assetId: "street-lamp", x: 3920, groundY: 665 },
-  { id: "open-cabinet", assetId: "cabinet", x: 4070, groundY: 665 },
-  { id: "open-bike-rack", assetId: "bike-rack", x: 4260, groundY: 665 },
-  { id: "open-bollards", assetId: "bollards", x: 4420, groundY: 665 },
-  { id: "open-planter-b", assetId: "planter", x: 4580, groundY: 665, mirror: true },
-  { id: "airport-terminal", assetId: "terminal", x: 6450, groundY: 665 },
+  { id: "open-planter-a", assetId: "planter", x: 3300, plane: "walk" },
+  { id: "open-lamp-a", assetId: "street-lamp", x: 3430, plane: "walk" },
+  { id: "open-bench", assetId: "bench", x: 3600, plane: "walk" },
+  { id: "open-lamp-b", assetId: "street-lamp", x: 3920, plane: "walk" },
+  { id: "open-cabinet", assetId: "cabinet", x: 4070, plane: "walk" },
+  { id: "open-bike-rack", assetId: "bike-rack", x: 4260, plane: "walk" },
+  { id: "open-bollards", assetId: "bollards", x: 4420, plane: "walk" },
+  { id: "open-planter-b", assetId: "planter", x: 4580, plane: "walk", mirror: true },
+  { id: "airport-terminal", assetId: "terminal", x: 6450, plane: "back" },
 ]);
 
 const FENCE_COMPONENTS = Object.freeze({
@@ -61,10 +63,12 @@ const FENCE_COMPONENTS = Object.freeze({
 
 function groundProp(prop) {
   const asset = ASSETS[prop.assetId];
+  const groundY = GROUND_PLANES[prop.plane];
+  if (groundY === undefined) throw new Error(`Unknown ground plane: ${prop.plane}`);
   return {
     ...prop,
     baseY: asset.baseY,
-    groundY: prop.groundY ?? 665,
+    groundY,
     mirror: Boolean(prop.mirror),
   };
 }

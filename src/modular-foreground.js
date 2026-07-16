@@ -45,7 +45,7 @@ function fillFenceSpan(props, run, component, fromX, toX, suffix) {
       assetId: component.id,
       x,
       width: component.width,
-      groundY: run.groundY,
+      plane: run.plane,
     });
     coveredTo = x + component.width;
     index += 1;
@@ -56,7 +56,7 @@ function fillFenceSpan(props, run, component, fromX, toX, suffix) {
       assetId: component.id,
       x: Math.max(fromX, toX - component.width),
       width: component.width,
-      groundY: run.groundY,
+      plane: run.plane,
     });
   }
 }
@@ -67,7 +67,7 @@ export function expandFenceRun(run, components) {
     assetId: components.start.id,
     x: run.startX,
     width: components.start.width,
-    groundY: run.groundY,
+    plane: run.plane,
   }];
   const contentStart = run.startX + components.start.width;
   const contentEnd = run.endX - components.end.width;
@@ -79,7 +79,7 @@ export function expandFenceRun(run, components) {
       assetId: components.gate.id,
       x: run.gateX,
       width: components.gate.width,
-      groundY: run.groundY,
+      plane: run.plane,
     });
     fillFenceSpan(
       props,
@@ -98,7 +98,7 @@ export function expandFenceRun(run, components) {
     assetId: components.end.id,
     x: run.endX - components.end.width,
     width: components.end.width,
-    groundY: run.groundY,
+    plane: run.plane,
   });
   return props;
 }

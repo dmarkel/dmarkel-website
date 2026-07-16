@@ -4,7 +4,9 @@ import assert from "node:assert/strict";
 import {
   ASSETS,
   FENCE_RUNS,
+  GROUND_PLANES,
   OLD_BOUNDARIES,
+  PROPS,
   buildHoustonForeground,
 } from "../src/houston-foreground.js";
 
@@ -34,12 +36,23 @@ test("iron and chain fences are separated by an intentional open span", () => {
   assert.equal(chain.gateX, undefined);
 });
 
-test("every prop is grounded and remains inside the world", () => {
+test("structural props use the back plane and street props use the walking plane", () => {
   const scene = buildHoustonForeground();
+  const walkAssets = new Set([
+    "planter", "bench", "cabinet", "bike-rack", "bollards", "street-lamp",
+  ]);
   for (const prop of scene.props) {
-    assert.equal(prop.groundY, 665, prop.id);
+    const expected = walkAssets.has(prop.assetId) ? GROUND_PLANES.walk : GROUND_PLANES.back;
+    assert.equal(prop.groundY, expected, prop.id);
     assert.ok(prop.x >= 0, prop.id);
     assert.ok(prop.x + ASSETS[prop.assetId].width <= 7624, prop.id);
     assert.ok(Math.abs(prop.baseY - ASSETS[prop.assetId].baseY) <= 8, prop.id);
+  }
+});
+
+test("raw foreground entries declare planes rather than duplicate y coordinates", () => {
+  for (const prop of [...FENCE_RUNS, ...PROPS]) {
+    assert.ok(["back", "walk"].includes(prop.plane), prop.id);
+    assert.equal(Object.hasOwn(prop, "groundY"), false, prop.id);
   }
 });
