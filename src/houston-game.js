@@ -1,5 +1,7 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
+import { ASSETS, buildHoustonForeground } from "./houston-foreground.js";
 import { createInput } from "./input.js";
+import { groundTileTransforms, propTransform } from "./modular-foreground.js";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import { layerPanelTransforms, sceneWorld } from "./scene-geometry.js";
@@ -23,17 +25,8 @@ const CHAPTER_LAYERS = Object.freeze([
     ],
     factor: 0.38,
   },
-  {
-    name: "foreground",
-    paths: [
-      "assets/backgrounds/houston-chapter/foreground-01-v3.png",
-      "assets/backgrounds/houston-chapter/foreground-02-v3.png",
-      "assets/backgrounds/houston-chapter/foreground-03-v4.png",
-      "assets/backgrounds/houston-chapter/foreground-04-v3.png",
-    ],
-    factor: 1,
-  },
 ]);
+const FOREGROUND = buildHoustonForeground();
 
 const stage = document.querySelector(".stage");
 const canvas = document.querySelector("#game");
@@ -54,6 +47,10 @@ const imagePaths = {
     CHAPTER_LAYERS.flatMap(({ name, paths }) => (
       paths.map((path, index) => [`${name}-${index}`, path])
     )),
+  ),
+  ground: FOREGROUND.ground.path,
+  ...Object.fromEntries(
+    Object.entries(ASSETS).map(([id, asset]) => [`foreground-${id}`, asset.path]),
   ),
 };
 
@@ -156,6 +153,56 @@ function drawScene(images, cameraX) {
         transform.height,
       );
     });
+  }
+
+  const sceneY = world.floorY - ART.groundLine * world.scale;
+  const groundTransforms = groundTileTransforms(
+    cameraX,
+    viewport.width,
+    world.width,
+    world.scale,
+    FOREGROUND.ground.width,
+    FOREGROUND.ground.height,
+    FOREGROUND.ground.topSourceY,
+    sceneY,
+  );
+  for (const transform of groundTransforms) {
+    context.drawImage(
+      images.ground,
+      transform.x,
+      transform.y,
+      transform.width,
+      transform.height,
+    );
+  }
+
+  for (const prop of FOREGROUND.props) {
+    const asset = ASSETS[prop.assetId];
+    const transform = propTransform(
+      prop,
+      asset.width,
+      asset.height,
+      cameraX,
+      world.scale,
+      sceneY,
+    );
+    if (transform.x + transform.width < 0 || transform.x > viewport.width) continue;
+    const image = images[`foreground-${prop.assetId}`];
+    if (transform.mirror) {
+      context.save();
+      context.translate(transform.x + transform.width, transform.y);
+      context.scale(-1, 1);
+      context.drawImage(image, 0, 0, transform.width, transform.height);
+      context.restore();
+    } else {
+      context.drawImage(
+        image,
+        transform.x,
+        transform.y,
+        transform.width,
+        transform.height,
+      );
+    }
   }
 }
 
