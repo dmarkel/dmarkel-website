@@ -23,6 +23,10 @@ class HoustonRouteConfigTests(unittest.TestCase):
         source = (ROOT / "houston.html").read_text()
         self.assertIn("houston-game.js?v=chapter-5", source)
 
+    def test_changed_geometry_module_uses_chapter_5_cache_version(self):
+        source = (ROOT / "src/houston-game.js").read_text()
+        self.assertIn('from "./scene-geometry.js?v=chapter-5"', source)
+
 
 if __name__ == "__main__":
     unittest.main()

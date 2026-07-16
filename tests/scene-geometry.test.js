@@ -5,6 +5,7 @@ import {
   layerPanelTransforms,
   layerTransform,
   sceneScale,
+  sceneFloor,
   sceneWorld,
 } from "../src/scene-geometry.js";
 
@@ -12,6 +13,11 @@ import {
 test("scene scaling is uniform and never shrinks proof art", () => {
   assert.equal(sceneScale(390, 825), 1);
   assert.equal(sceneScale(900, 825), 900 / 825);
+});
+
+test("scene floor keeps the art flush with the bottom in portrait", () => {
+  assert.equal(sceneFloor(844, 825, 735, 1), 754);
+  assert.equal(sceneFloor(390, 825, 735, 1), 331.5);
 });
 
 test("world dimensions preserve the source aspect ratio", () => {

@@ -4,7 +4,7 @@ import { createInput } from "./input.js";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
-import { layerPanelTransforms, sceneWorld } from "./scene-geometry.js";
+import { layerPanelTransforms, sceneFloor, sceneWorld } from "./scene-geometry.js?v=chapter-5";
 import { applyViewport, readViewport } from "./viewport.js";
 
 const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
@@ -96,7 +96,11 @@ function resize() {
   context.imageSmoothingEnabled = false;
 
   viewport = nextViewport;
-  world = { width: scene.width * 4, floorY: height * 0.85, scale: scene.scale };
+  world = {
+    width: scene.width * 4,
+    floorY: sceneFloor(height, ART.height, ART.groundLine, scene.scale),
+    scale: scene.scale,
+  };
   scale = Math.max(1.5, Math.min(2.5, Math.min(width / 430, height / 310)));
 
   if (!player) {

@@ -2,6 +2,12 @@ export function sceneScale(viewportHeight, artHeight) {
   return Math.max(1, viewportHeight / artHeight);
 }
 
+export function sceneFloor(viewportHeight, artHeight, groundLine, scale) {
+  const familiarFloor = viewportHeight * 0.85;
+  const flushFloor = viewportHeight - (artHeight - groundLine) * scale;
+  return Math.max(familiarFloor, flushFloor);
+}
+
 export function sceneWorld(artWidth, artHeight, viewportHeight, groundLine) {
   const scale = sceneScale(viewportHeight, artHeight);
   return {
