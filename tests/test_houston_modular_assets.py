@@ -6,7 +6,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULAR = ROOT / "assets" / "backgrounds" / "houston-modular"
-GROUND = MODULAR / "ground-tile.png"
+GROUND = MODULAR / "ground-strip.png"
 REQUIRED_PROPS = (
     "iron-start.png", "iron-middle.png", "iron-gate.png", "iron-end.png",
     "chain-start.png", "chain-middle.png", "chain-end.png",
@@ -18,10 +18,10 @@ REQUIRED_PROPS = (
 class HoustonModularAssetTests(unittest.TestCase):
     def test_ground_tile_is_opaque_and_seamless(self):
         image = Image.open(GROUND).convert("RGBA")
-        self.assertEqual(image.size, (400, 160))
+        self.assertEqual(image.size, (3812, 160))
         self.assertEqual(image.getchannel("A").getextrema(), (255, 255))
         left = list(image.crop((0, 0, 1, 160)).getdata())
-        right = list(image.crop((399, 0, 400, 160)).getdata())
+        right = list(image.crop((3811, 0, 3812, 160)).getdata())
         self.assertEqual(left, right)
 
     def test_required_props_have_binary_alpha_and_no_magenta_contamination(self):

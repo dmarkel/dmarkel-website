@@ -5,8 +5,8 @@ const ROOT = "assets/backgrounds/houston-modular";
 export const GROUND_PLANES = Object.freeze({ back: 665, walk: 735 });
 
 export const GROUND = Object.freeze({
-  path: `${ROOT}/ground-tile.png`,
-  width: 400,
+  path: `${ROOT}/ground-strip.png`,
+  width: 3812,
   height: 160,
   topSourceY: 665,
 });
