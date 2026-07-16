@@ -1,10 +1,15 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { ASSETS, buildHoustonForeground } from "./houston-foreground.js";
+import { ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-6";
 import { createInput } from "./input.js";
-import { groundTileTransforms, propTransform } from "./modular-foreground.js";
+import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-6";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
-import { layerPanelTransforms, sceneFloor, sceneWorld } from "./scene-geometry.js?v=chapter-5";
+import {
+  endpointAlignedFactor,
+  layerPanelTransforms,
+  sceneFloor,
+  sceneWorld,
+} from "./scene-geometry.js?v=chapter-6";
 import { applyViewport, readViewport } from "./viewport.js";
 
 const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
@@ -21,7 +26,7 @@ const CHAPTER_LAYERS = Object.freeze([
     name: "environment",
     paths: [
       "assets/backgrounds/houston-proof/environment.png",
-      "assets/backgrounds/houston-chapter/environment-02.png",
+      "assets/backgrounds/houston-chapter/environment-02-v2.png",
     ],
     factor: 0.38,
   },
@@ -136,11 +141,18 @@ function drawScene(images, cameraX) {
   context.fillStyle = "#8ed6f0";
   context.fillRect(0, 0, viewport.width, viewport.height);
   for (const layer of CHAPTER_LAYERS) {
+    const factor = layer.name === "environment"
+      ? endpointAlignedFactor(
+        ART.width * layer.paths.length * world.scale,
+        viewport.width,
+        world.width,
+      )
+      : layer.factor;
     const transforms = layerPanelTransforms(
       cameraX,
       viewport.width,
       world.width,
-      layer.factor,
+      factor,
       ART.width,
       ART.height,
       layer.paths.length,
