@@ -42,3 +42,19 @@ test("fence run has explicit start gate and end components", () => {
   assert.equal(props.at(-1).assetId, "iron-end");
   assert.equal(props.filter((prop) => prop.assetId === "iron-gate").length, 1);
 });
+
+test("fence components cover the full run without an empty span", () => {
+  const props = expandFenceRun(
+    { id: "airport", startX: 4700, endX: 6250, groundY: 665 },
+    {
+      start: { id: "chain-start", width: 100 },
+      middle: { id: "chain-middle", width: 378 },
+      end: { id: "chain-end", width: 98 },
+    },
+  ).sort((left, right) => left.x - right.x);
+
+  props.slice(1).forEach((prop, index) => {
+    const previous = props[index];
+    assert.ok(prop.x <= previous.x + previous.width);
+  });
+});

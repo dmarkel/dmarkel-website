@@ -38,14 +38,26 @@ export function propTransform(prop, imageWidth, imageHeight, cameraX, scale, sce
 
 function fillFenceSpan(props, run, component, fromX, toX, suffix) {
   let index = 0;
+  let coveredTo = fromX;
   for (let x = fromX; x + component.width <= toX; x += component.width) {
     props.push({
       id: `${run.id}-${suffix}-${index}`,
       assetId: component.id,
       x,
+      width: component.width,
       groundY: run.groundY,
     });
+    coveredTo = x + component.width;
     index += 1;
+  }
+  if (coveredTo < toX) {
+    props.push({
+      id: `${run.id}-${suffix}-${index}`,
+      assetId: component.id,
+      x: Math.max(fromX, toX - component.width),
+      width: component.width,
+      groundY: run.groundY,
+    });
   }
 }
 
@@ -54,6 +66,7 @@ export function expandFenceRun(run, components) {
     id: `${run.id}-start`,
     assetId: components.start.id,
     x: run.startX,
+    width: components.start.width,
     groundY: run.groundY,
   }];
   const contentStart = run.startX + components.start.width;
@@ -65,6 +78,7 @@ export function expandFenceRun(run, components) {
       id: `${run.id}-gate`,
       assetId: components.gate.id,
       x: run.gateX,
+      width: components.gate.width,
       groundY: run.groundY,
     });
     fillFenceSpan(
@@ -83,6 +97,7 @@ export function expandFenceRun(run, components) {
     id: `${run.id}-end`,
     assetId: components.end.id,
     x: run.endX - components.end.width,
+    width: components.end.width,
     groundY: run.groundY,
   });
   return props;
