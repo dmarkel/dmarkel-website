@@ -26,6 +26,7 @@ export const ASSETS = Object.freeze({
   bollards: { path: `${ROOT}/bollards.png`, width: 169, height: 87, baseY: 86 },
   "street-lamp": { path: `${ROOT}/street-lamp.png`, width: 68, height: 167, baseY: 166 },
   terminal: { path: `${ROOT}/terminal.png`, width: 1068, height: 584, baseY: 583 },
+  "middle-verge": { path: `${ROOT}/middle-verge.png`, width: 1500, height: 161, baseY: 160 },
 });
 
 export const OLD_BOUNDARIES = Object.freeze([1906, 3812, 5718]);
@@ -36,6 +37,7 @@ export const FENCE_RUNS = Object.freeze([
 ]);
 
 export const PROPS = Object.freeze([
+  { id: "middle-verge", assetId: "middle-verge", x: 3200, plane: "back" },
   { id: "open-planter-a", assetId: "planter", x: 3300, plane: "walk" },
   { id: "open-lamp-a", assetId: "street-lamp", x: 3430, plane: "walk" },
   { id: "open-bench", assetId: "bench", x: 3600, plane: "walk" },

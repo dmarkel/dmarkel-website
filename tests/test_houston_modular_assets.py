@@ -7,6 +7,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 MODULAR = ROOT / "assets" / "backgrounds" / "houston-modular"
 GROUND = MODULAR / "ground-strip.png"
+MIDDLE_VERGE = MODULAR / "middle-verge.png"
 REQUIRED_PROPS = (
     "iron-start.png", "iron-middle.png", "iron-gate.png", "iron-end.png",
     "chain-start.png", "chain-middle.png", "chain-end.png",
@@ -35,6 +36,17 @@ class HoustonModularAssetTests(unittest.TestCase):
                     for r, g, b, a in image.getdata()
                 )
                 self.assertEqual(contaminated, 0)
+
+    def test_middle_verge_is_wide_clean_and_binary(self):
+        image = Image.open(MIDDLE_VERGE).convert("RGBA")
+        self.assertGreaterEqual(image.width, 1400)
+        self.assertLessEqual(image.height, 220)
+        self.assertLessEqual(set(image.getchannel("A").getdata()), {0, 255})
+        contaminated = sum(
+            a > 0 and r > 90 and b > 90 and min(r, b) - g > 35
+            for r, g, b, a in image.getdata()
+        )
+        self.assertEqual(contaminated, 0)
 
 
 if __name__ == "__main__":

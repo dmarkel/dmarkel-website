@@ -27,6 +27,7 @@ EDGE_SAFE_FOREGROUND = [
     CHAPTER / "foreground-04-v3.png",
 ]
 MIDDLE_REBUILD = CHAPTER / "foreground-03-v4.png"
+ROAD_FREE_ENVIRONMENT = CHAPTER / "environment-02-v2.png"
 
 
 def opaque_ratio(image, box):
@@ -40,6 +41,18 @@ def opaque_ratio(image, box):
 
 
 class HoustonChapterAssetTests(unittest.TestCase):
+    def test_road_free_environment_has_approved_frame_and_clean_key(self):
+        image = Image.open(ROAD_FREE_ENVIRONMENT).convert("RGBA")
+        self.assertEqual(image.size, (1906, 825))
+        self.assertEqual(image.getpixel((0, 0))[3], 0)
+        self.assertEqual(image.getpixel((1905, 0))[3], 0)
+        self.assertGreater(opaque_ratio(image, (0, 350, 1906, 735)), 0.20)
+        contaminated = sum(
+            a > 0 and r > 90 and b > 90 and min(r, b) - g > 35
+            for r, g, b, a in image.getdata()
+        )
+        self.assertEqual(contaminated, 0)
+
     def test_all_panels_share_the_approved_frame(self):
         paths = FAR + ENVIRONMENT + FOREGROUND
         sizes = set()
