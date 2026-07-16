@@ -6,6 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class HoustonRouteConfigTests(unittest.TestCase):
+    def test_static_site_bypasses_unneeded_jekyll_build(self):
+        self.assertTrue((ROOT / ".nojekyll").exists())
+
     def test_route_imports_modular_foreground(self):
         source = (ROOT / "src/houston-game.js").read_text()
         self.assertIn('from "./houston-foreground.js?v=chapter-6"', source)
