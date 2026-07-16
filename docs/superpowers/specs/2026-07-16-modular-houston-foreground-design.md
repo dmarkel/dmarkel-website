@@ -51,10 +51,10 @@ Fences are assembled from explicit components rather than cropped panel fragment
 
 - start post;
 - repeatable middle segment;
-- gate segment where appropriate;
+- one gate segment in the Lamar iron-fence run;
 - end post.
 
-The scene manifest defines each fence run by world start and end coordinates. A run must end with an end post before a different fence type begins. Iron fencing is used around Lamar and the downtown residential transition. Airport chain-link fencing begins later as a separate run with its own start post. There is a deliberate open streetscape between the two fence systems.
+The scene manifest defines each fence run by world start and end coordinates. A run must end with an end post before a different fence type begins. Iron fencing is used around Lamar and the downtown residential transition and contains one explicit gate. Airport chain-link fencing begins later as a separate run with its own start post and contains no gate in this chapter. There is a deliberate open streetscape between the two fence systems.
 
 No fence may start, stop, change height, or change style because of an invisible 1906-pixel panel boundary.
 
