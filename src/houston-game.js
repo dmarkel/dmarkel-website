@@ -1,7 +1,7 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-6";
+import { ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-7";
 import { createInput } from "./input.js";
-import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-6";
+import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-7";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import {
@@ -9,7 +9,7 @@ import {
   layerPanelTransforms,
   sceneFloor,
   sceneWorld,
-} from "./scene-geometry.js?v=chapter-6";
+} from "./scene-geometry.js?v=chapter-7";
 import { applyViewport, readViewport } from "./viewport.js";
 
 const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
