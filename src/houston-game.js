@@ -1,7 +1,7 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-7";
+import { ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-8";
 import { createInput } from "./input.js";
-import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-7";
+import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-8";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import {
@@ -9,7 +9,7 @@ import {
   layerPanelTransforms,
   sceneFloor,
   sceneWorld,
-} from "./scene-geometry.js?v=chapter-7";
+} from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
 const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
@@ -103,7 +103,7 @@ function resize() {
 
   viewport = nextViewport;
   world = {
-    width: scene.width * 4,
+    width: FOREGROUND.endSourceX * scene.scale,
     floorY: sceneFloor(height, ART.height, ART.groundLine, scene.scale),
     scale: scene.scale,
   };
@@ -136,6 +136,38 @@ function resize() {
   previousPlayer = { ...player };
   camera = stepCamera(camera, player.x + player.width / 2, width, world.width, 1);
   previousCamera = { ...camera };
+}
+
+function drawProps(images, props, cameraX) {
+  const sceneY = world.floorY - ART.groundLine * world.scale;
+  for (const prop of props) {
+    const asset = ASSETS[prop.assetId];
+    const transform = propTransform(
+      prop,
+      asset.width,
+      asset.height,
+      cameraX,
+      world.scale,
+      sceneY,
+    );
+    if (transform.x + transform.width < 0 || transform.x > viewport.width) continue;
+    const image = images[`foreground-${prop.assetId}`];
+    if (transform.mirror) {
+      context.save();
+      context.translate(transform.x + transform.width, transform.y);
+      context.scale(-1, 1);
+      context.drawImage(image, 0, 0, transform.width, transform.height);
+      context.restore();
+    } else {
+      context.drawImage(
+        image,
+        transform.x,
+        transform.y,
+        transform.width,
+        transform.height,
+      );
+    }
+  }
 }
 
 function drawScene(images, cameraX) {
@@ -194,34 +226,7 @@ function drawScene(images, cameraX) {
     );
   }
 
-  for (const prop of FOREGROUND.props) {
-    const asset = ASSETS[prop.assetId];
-    const transform = propTransform(
-      prop,
-      asset.width,
-      asset.height,
-      cameraX,
-      world.scale,
-      sceneY,
-    );
-    if (transform.x + transform.width < 0 || transform.x > viewport.width) continue;
-    const image = images[`foreground-${prop.assetId}`];
-    if (transform.mirror) {
-      context.save();
-      context.translate(transform.x + transform.width, transform.y);
-      context.scale(-1, 1);
-      context.drawImage(image, 0, 0, transform.width, transform.height);
-      context.restore();
-    } else {
-      context.drawImage(
-        image,
-        transform.x,
-        transform.y,
-        transform.width,
-        transform.height,
-      );
-    }
-  }
+  drawProps(images, FOREGROUND.backProps, cameraX);
 }
 
 function drawPlayer(images, alpha) {
@@ -293,6 +298,7 @@ function start(images) {
     const cameraX = previousCamera.x + (camera.x - previousCamera.x) * alpha;
     drawScene(images, cameraX);
     drawPlayer(images, alpha);
+    drawProps(images, FOREGROUND.frontProps, cameraX);
     requestAnimationFrame(frame);
   }
 
