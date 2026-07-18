@@ -70,6 +70,26 @@ test("panel transforms stay contiguous and uniformly scaled", () => {
   assert.equal(transforms[0].scaleX, transforms[0].scaleY);
 });
 
+test("panel transforms scale independent source-space vertical offsets", () => {
+  const transforms = layerPanelTransforms(
+    1000,
+    390,
+    7624,
+    0.38,
+    1906,
+    825,
+    2,
+    1.25,
+    735,
+    754,
+    [80, 0],
+  );
+
+  const sharedBaseline = 754 - 735 * 1.25;
+  assert.equal(transforms[0].y, sharedBaseline + 100);
+  assert.equal(transforms[1].y, sharedBaseline);
+});
+
 test("approved panel counts cover the narrowest layer at the world endpoint", () => {
   const far = layerPanelTransforms(
     6780,

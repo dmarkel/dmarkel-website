@@ -59,6 +59,7 @@ export function layerPanelTransforms(
   scale,
   groundLine,
   floorY,
+  panelOffsetYs = [],
 ) {
   const maxCamera = Math.max(0, worldWidth - viewportWidth);
   const safeCamera = Math.max(0, Math.min(maxCamera, cameraX));
@@ -68,7 +69,7 @@ export function layerPanelTransforms(
 
   return Array.from({ length: panelCount }, (_, index) => ({
     x: originX + index * width,
-    y: floorY - groundLine * scale,
+    y: floorY - groundLine * scale + (panelOffsetYs[index] ?? 0) * scale,
     width,
     height,
     scaleX: scale,
