@@ -1,4 +1,4 @@
-import { expandFenceRun } from "./modular-foreground.js?v=chapter-7";
+import { expandFenceRun } from "./modular-foreground.js?v=chapter-6";
 
 const ROOT = "assets/backgrounds/houston-modular";
 
