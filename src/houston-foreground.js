@@ -79,5 +79,17 @@ export function buildHoustonForeground() {
   const fences = FENCE_RUNS.flatMap((run) => (
     expandFenceRun(run, FENCE_COMPONENTS[run.type]).map(groundProp)
   ));
-  return { ground: GROUND, props: [...fences, ...PROPS.map(groundProp)] };
+  const props = [...fences, ...PROPS.map(groundProp)];
+  const terminal = props.find((prop) => prop.id === "airport-terminal");
+  if (!terminal) throw new Error("Missing airport-terminal endpoint prop");
+  const terminalAsset = ASSETS[terminal.assetId];
+  if (!terminalAsset) throw new Error("Missing airport-terminal endpoint asset");
+
+  return {
+    ground: GROUND,
+    props,
+    backProps: props.filter((prop) => prop.plane === "back"),
+    frontProps: props.filter((prop) => prop.plane === "walk"),
+    endSourceX: terminal.x + terminalAsset.width,
+  };
 }

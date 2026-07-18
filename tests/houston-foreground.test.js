@@ -56,3 +56,38 @@ test("raw foreground entries declare planes rather than duplicate y coordinates"
     assert.equal(Object.hasOwn(prop, "groundY"), false, prop.id);
   }
 });
+
+test("foreground partitions are exhaustive and preserve declared depth", () => {
+  const scene = buildHoustonForeground();
+  const allIds = scene.props.map((prop) => prop.id).sort();
+  const partitionIds = [...scene.backProps, ...scene.frontProps]
+    .map((prop) => prop.id)
+    .sort();
+
+  assert.deepEqual(partitionIds, allIds);
+  assert.ok(scene.backProps.every((prop) => prop.plane === "back"));
+  assert.ok(scene.frontProps.every((prop) => prop.plane === "walk"));
+
+  const frontAssets = new Set(scene.frontProps.map((prop) => prop.assetId));
+  for (const assetId of [
+    "planter", "street-lamp", "bench", "cabinet", "bike-rack", "bollards",
+  ]) {
+    assert.ok(frontAssets.has(assetId), assetId);
+  }
+
+  const backIds = new Set(scene.backProps.map((prop) => prop.id));
+  assert.ok(backIds.has("middle-verge"));
+  assert.ok(backIds.has("airport-terminal"));
+  assert.ok(scene.backProps.some((prop) => prop.id.startsWith("lamar-")));
+  assert.ok(scene.backProps.some((prop) => prop.id.startsWith("airport-")));
+});
+
+test("world endpoint is derived from the unchanged terminal right edge", () => {
+  const scene = buildHoustonForeground();
+  const terminal = scene.props.find((prop) => prop.id === "airport-terminal");
+
+  assert.equal(terminal.x, 6450);
+  assert.equal(ASSETS[terminal.assetId].width, 1068);
+  assert.equal(scene.endSourceX, terminal.x + ASSETS[terminal.assetId].width);
+  assert.equal(scene.endSourceX, 7518);
+});
