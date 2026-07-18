@@ -25,12 +25,14 @@ export const ASSETS = Object.freeze({
   "bike-rack": { path: `${ROOT}/bike-rack.png`, width: 58, height: 85, baseY: 84 },
   bollards: { path: `${ROOT}/bollards.png`, width: 169, height: 87, baseY: 86 },
   "street-lamp": { path: `${ROOT}/street-lamp.png`, width: 68, height: 167, baseY: 166 },
+  terminal: { path: `${ROOT}/terminal.png`, width: 1068, height: 584, baseY: 583 },
   "middle-verge": { path: `${ROOT}/middle-verge.png`, width: 1500, height: 161, baseY: 160 },
 });
 
 export const OLD_BOUNDARIES = Object.freeze([1906, 3812, 5718]);
 
 export const FENCE_RUNS = Object.freeze([
+  { id: "lamar", type: "iron", startX: 80, endX: 3200, gateX: 760, plane: "back" },
   { id: "airport", type: "chain", startX: 4700, endX: 6250, plane: "back" },
 ]);
 
@@ -44,6 +46,7 @@ export const PROPS = Object.freeze([
   { id: "open-bike-rack", assetId: "bike-rack", x: 4260, plane: "walk" },
   { id: "open-bollards", assetId: "bollards", x: 4420, plane: "walk" },
   { id: "open-planter-b", assetId: "planter", x: 4580, plane: "walk", mirror: true },
+  { id: "airport-terminal", assetId: "terminal", x: 6450, plane: "back" },
 ]);
 
 const FENCE_COMPONENTS = Object.freeze({

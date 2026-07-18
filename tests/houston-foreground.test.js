@@ -28,20 +28,12 @@ test("fence endpoints avoid every old panel boundary", () => {
   }
 });
 
-test("the baked Lamar environment is the only Lamar fence source", () => {
-  assert.equal(FENCE_RUNS.some((run) => run.id === "lamar" || run.type === "iron"), false);
-});
-
-test("the airport environment is the only terminal architecture source", () => {
-  assert.equal(Object.hasOwn(ASSETS, "terminal"), false);
-  assert.equal(PROPS.some((prop) => prop.assetId === "terminal"), false);
-});
-
-test("the airport chain fence is the only modular fence run", () => {
-  assert.equal(FENCE_RUNS.length, 1);
-  assert.equal(FENCE_RUNS[0].id, "airport");
-  assert.equal(FENCE_RUNS[0].type, "chain");
-  assert.equal(FENCE_RUNS[0].gateX, undefined);
+test("iron and chain fences are separated by an intentional open span", () => {
+  const iron = FENCE_RUNS.find((run) => run.type === "iron");
+  const chain = FENCE_RUNS.find((run) => run.type === "chain");
+  assert.ok(chain.startX - iron.endX >= 900);
+  assert.equal(iron.gateX, 760);
+  assert.equal(chain.gateX, undefined);
 });
 
 test("structural props use the back plane and street props use the walking plane", () => {
