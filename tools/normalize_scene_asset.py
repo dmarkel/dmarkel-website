@@ -81,6 +81,17 @@ def normalize_keyed(
     result.putalpha(alpha)
 
     pixels = result.load()
+    for y in range(result.height):
+        for x in range(result.width):
+            red, green, blue, alpha_value = pixels[x, y]
+            if (
+                alpha_value > 0
+                and red > 90
+                and blue > 90
+                and min(red, blue) - green > 35
+            ):
+                pixels[x, y] = (green, green, green, alpha_value)
+
     width, height = result.size
     border = min(2, width // 2, height // 2)
     for offset in range(border):

@@ -62,6 +62,19 @@ class NormalizeSceneAssetTests(unittest.TestCase):
             self.assertEqual(result.getpixel((0, y))[3], 0)
             self.assertEqual(result.getpixel((19, y))[3], 0)
 
+    def test_keyed_normalization_neutralizes_enclosed_magenta_spill(self):
+        source = Image.new("RGB", (20, 20), "#ff00ff")
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((4, 4, 15, 15), fill="#375461")
+        draw.point((10, 10), fill="#965096")
+
+        result = normalize_keyed(source, (20, 20), (255, 0, 255), 35)
+
+        red, green, blue, alpha = result.getpixel((10, 10))
+        self.assertEqual(alpha, 255)
+        self.assertLessEqual(red, green)
+        self.assertLessEqual(blue, green)
+
 
 if __name__ == "__main__":
     unittest.main()
