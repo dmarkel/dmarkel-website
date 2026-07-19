@@ -8,7 +8,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 FAR = ("far-01.png", "far-02.png")
-ENVIRONMENT = ("environment-01-v2.png", "environment-02.png")
+ENVIRONMENT = ("environment-01-v2.png", "environment-02-v2.png")
 GROUND = "ground-strip.png"
 PROPS = {
     "bench.png": (150, 96),
@@ -92,6 +92,15 @@ class BloomingtonProofAssetTests(unittest.TestCase):
             0.08,
             "Kelley must include its full limestone right wing before the seam buffer",
         )
+
+    def test_sample_gates_are_complete_inside_the_transition(self):
+        pixels = np.asarray(open_rgba("environment-02-v2.png"))
+        alpha = pixels[:, :, 3] > 0
+        left_gate = alpha[350:735, 260:520]
+        right_gate = alpha[350:735, 580:840]
+        self.assertGreater(float(left_gate.mean()), 0.25)
+        self.assertGreater(float(right_gate.mean()), 0.25)
+        self.assertLess(float(alpha[:500, :128].mean()), 0.05)
 
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)
