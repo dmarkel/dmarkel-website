@@ -4,11 +4,16 @@ import assert from "node:assert/strict";
 import {
   ASSETS,
   FENCE_RUNS,
+  GROUND,
   GROUND_PLANES,
   OLD_BOUNDARIES,
   PROPS,
   buildHoustonForeground,
 } from "../src/houston-foreground.js";
+
+test("ground asset URL is revisioned so browsers do not reuse the broken strip", () => {
+  assert.match(GROUND.path, /ground-strip\.png\?v=sidewalk-2$/);
+});
 
 test("all manifest ids are unique and paths are modular assets", () => {
   const scene = buildHoustonForeground();
