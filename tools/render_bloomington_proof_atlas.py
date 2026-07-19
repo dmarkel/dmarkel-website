@@ -55,7 +55,7 @@ def build_scene(avatar_x: int) -> Image.Image:
     scene = Image.new("RGBA", WORLD_SIZE, "#8ed6f0")
     scene.alpha_composite(load("far-01.png"), (0, 0))
     scene.alpha_composite(load("far-02.png"), (1906, 0))
-    scene.alpha_composite(load("environment-01.png"), (0, 0))
+    scene.alpha_composite(load("environment-01-v2.png"), (0, 0))
     scene.alpha_composite(load("environment-02.png"), (1906, 0))
     scene.alpha_composite(load("ground-strip.png"), (0, 665))
     for prop in BACK_PROPS:

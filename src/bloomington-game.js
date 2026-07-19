@@ -24,7 +24,7 @@ const CHAPTER_LAYERS = Object.freeze([
   {
     name: "environment",
     paths: [
-      "assets/backgrounds/bloomington-proof/environment-01.png?v=bloomington-1",
+      "assets/backgrounds/bloomington-proof/environment-01-v2.png?v=bloomington-2",
       "assets/backgrounds/bloomington-proof/environment-02.png?v=bloomington-1",
     ],
     factor: 0.38,

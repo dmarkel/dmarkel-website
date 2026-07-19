@@ -8,7 +8,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 FAR = ("far-01.png", "far-02.png")
-ENVIRONMENT = ("environment-01.png", "environment-02.png")
+ENVIRONMENT = ("environment-01-v2.png", "environment-02.png")
 GROUND = "ground-strip.png"
 PROPS = {
     "bench.png": (150, 96),
@@ -52,7 +52,7 @@ class BloomingtonProofAssetTests(unittest.TestCase):
                 self.assertEqual(open_rgba(name).getchannel("A").getextrema(), (255, 255))
 
     def test_environment_join_has_no_large_upper_object(self):
-        panel_one = np.asarray(open_rgba("environment-01.png"))
+        panel_one = np.asarray(open_rgba("environment-01-v2.png"))
         panel_two = np.asarray(open_rgba("environment-02.png"))
         seam_regions = (panel_one[:560, -128:, 3], panel_two[:560, :128, 3])
         for index, alpha in enumerate(seam_regions, start=1):
@@ -74,6 +74,24 @@ class BloomingtonProofAssetTests(unittest.TestCase):
                     np.minimum(red, blue) - green > 35
                 )
                 self.assertFalse(bool(contaminated.any()))
+
+    def test_kelley_right_wing_is_present_before_the_safe_transition(self):
+        pixels = np.asarray(open_rgba("environment-01-v2.png")).astype(np.int16)
+        right_wing = pixels[470:690, 1500:1660]
+        visible = right_wing[:, :, 3] > 0
+        red, green, blue = (
+            right_wing[:, :, 0], right_wing[:, :, 1], right_wing[:, :, 2]
+        )
+        limestone = visible & (
+            np.maximum.reduce((red, green, blue))
+            - np.minimum.reduce((red, green, blue))
+            < 45
+        ) & (((red + green + blue) / 3 > 90) & ((red + green + blue) / 3 < 235))
+        self.assertGreater(
+            float(limestone.mean()),
+            0.08,
+            "Kelley must include its full limestone right wing before the seam buffer",
+        )
 
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)

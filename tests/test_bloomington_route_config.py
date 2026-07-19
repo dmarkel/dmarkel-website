@@ -9,13 +9,15 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_route_exists_and_uses_bloomington_cache_key(self):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 proof", html)
-        self.assertIn("bloomington-game.js?v=bloomington-1", html)
+        self.assertIn("bloomington-game.js?v=bloomington-2", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
         self.assertIn('from "./bloomington-foreground.js?v=bloomington-1"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
+        self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-02.png", source)
+        self.assertNotIn("assets/backgrounds/bloomington-proof/environment-01.png", source)
         self.assertNotIn("assets/backgrounds/houston", source)
 
     def test_avatar_and_shared_physics_are_reused(self):
