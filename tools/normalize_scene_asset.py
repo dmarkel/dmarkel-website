@@ -70,10 +70,14 @@ def normalize_keyed(
     size: tuple[int, int],
     key: Color = (255, 0, 255),
     tolerance: int = 55,
+    *,
+    transparent_border: int = 2,
 ) -> Image.Image:
     """Normalize a chroma-keyed sprite with binary alpha and a clear border."""
     if not 0 <= tolerance <= 255:
         raise ValueError("tolerance must be between 0 and 255")
+    if transparent_border < 0:
+        raise ValueError("transparent border must not be negative")
 
     resized = cover_resize(image, *size)
     result = extract_connected_chroma(resized, key, tolerance)
@@ -93,7 +97,7 @@ def normalize_keyed(
                 pixels[x, y] = (green, green, green, alpha_value)
 
     width, height = result.size
-    border = min(2, width // 2, height // 2)
+    border = min(transparent_border, width // 2, height // 2)
     for offset in range(border):
         for x in range(width):
             pixels[x, offset] = (0, 0, 0, 0)
@@ -101,6 +105,20 @@ def normalize_keyed(
         for y in range(height):
             pixels[offset, y] = (0, 0, 0, 0)
             pixels[width - 1 - offset, y] = (0, 0, 0, 0)
+    return result
+
+
+def align_visible_right(image: Image.Image) -> Image.Image:
+    """Shift a keyed subject so its rightmost visible pixel is the endpoint."""
+    source = image.convert("RGBA")
+    bounds = source.getchannel("A").getbbox()
+    if bounds is None:
+        raise ValueError("cannot align an image with no visible pixels")
+    shift = source.width - bounds[2]
+    if shift == 0:
+        return source
+    result = Image.new("RGBA", source.size, (0, 0, 0, 0))
+    result.alpha_composite(source, (shift, 0))
     return result
 
 
@@ -122,6 +140,8 @@ def main() -> None:
     parser.add_argument("--key-color", type=_parse_color)
     parser.add_argument("--tolerance", type=int, default=55)
     parser.add_argument("--binary-alpha", action="store_true")
+    parser.add_argument("--transparent-border", type=int, default=2)
+    parser.add_argument("--align-visible-right", action="store_true")
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
@@ -148,7 +168,10 @@ def main() -> None:
                 (args.width, args.height),
                 args.key_color,
                 args.tolerance,
+                transparent_border=args.transparent_border,
             )
+            if args.align_visible_right:
+                result = align_visible_right(result)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     result.save(output)

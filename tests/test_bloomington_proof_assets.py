@@ -62,6 +62,19 @@ class BloomingtonProofAssetTests(unittest.TestCase):
                 f"environment seam side {index} contains a large upper object",
             )
 
+    def test_environment_panels_have_no_visible_magenta_contamination(self):
+        for name in ENVIRONMENT:
+            with self.subTest(name=name):
+                pixels = np.asarray(open_rgba(name)).astype(np.int16)
+                visible = pixels[:, :, 3] > 0
+                red, green, blue = (
+                    pixels[:, :, 0], pixels[:, :, 1], pixels[:, :, 2]
+                )
+                contaminated = visible & (red > 90) & (blue > 90) & (
+                    np.minimum(red, blue) - green > 35
+                )
+                self.assertFalse(bool(contaminated.any()))
+
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)
         self.assertEqual(image.size, (3812, 160))

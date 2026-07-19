@@ -6,6 +6,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from tools.normalize_scene_asset import (
+    align_visible_right,
     cover_resize,
     normalize_keyed,
     normalize_opaque,
@@ -74,6 +75,29 @@ class NormalizeSceneAssetTests(unittest.TestCase):
         self.assertEqual(alpha, 255)
         self.assertLessEqual(red, green)
         self.assertLessEqual(blue, green)
+
+    def test_keyed_environment_can_preserve_an_opaque_endpoint_edge(self):
+        source = Image.new("RGB", (20, 20), "#ff00ff")
+        ImageDraw.Draw(source).rectangle((12, 4, 19, 19), fill="#375461")
+
+        result = normalize_keyed(
+            source,
+            (20, 20),
+            (255, 0, 255),
+            35,
+            transparent_border=0,
+        )
+
+        self.assertEqual(result.getpixel((19, 10))[3], 255)
+
+    def test_visible_subject_can_be_aligned_to_the_right_endpoint(self):
+        source = Image.new("RGBA", (20, 10), (0, 0, 0, 0))
+        ImageDraw.Draw(source).rectangle((4, 2, 15, 8), fill="#375461")
+
+        result = align_visible_right(source)
+
+        self.assertEqual(result.getpixel((19, 5))[3], 255)
+        self.assertEqual(result.getpixel((3, 5))[3], 0)
 
 
 if __name__ == "__main__":
