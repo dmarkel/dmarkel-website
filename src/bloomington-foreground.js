@@ -2,7 +2,7 @@ const ROOT = "assets/backgrounds/bloomington-proof";
 const revision = (name) => `${ROOT}/${name}?v=bloomington-1`;
 
 export const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
-export const GROUND_PLANES = Object.freeze({ back: 665, walk: 735 });
+export const GROUND_PLANES = Object.freeze({ back: 665, walk: 735, curb: 765 });
 export const GROUND = Object.freeze({
   path: revision("ground-strip.png"),
   width: 3812,
@@ -20,12 +20,12 @@ export const ASSETS = Object.freeze({
 });
 
 export const PROPS = Object.freeze([
-  { id: "campus-bench", assetId: "bench", x: 520, plane: "walk" },
-  { id: "campus-lamp", assetId: "campus-lamp", x: 930, plane: "walk" },
-  { id: "campus-planter", assetId: "planter", x: 1450, plane: "walk" },
-  { id: "kirkwood-news", assetId: "newspaper-box", x: 2250, plane: "walk" },
-  { id: "kirkwood-meter", assetId: "parking-meter", x: 2580, plane: "walk" },
-  { id: "kirkwood-rack", assetId: "bike-rack", x: 2910, plane: "walk" },
+  { id: "campus-bench", assetId: "bench", x: 520, plane: "curb" },
+  { id: "campus-lamp", assetId: "campus-lamp", x: 930, plane: "curb" },
+  { id: "campus-planter", assetId: "planter", x: 1450, plane: "curb" },
+  { id: "kirkwood-news", assetId: "newspaper-box", x: 2250, plane: "curb" },
+  { id: "kirkwood-meter", assetId: "parking-meter", x: 2580, plane: "curb" },
+  { id: "kirkwood-rack", assetId: "bike-rack", x: 2910, plane: "curb" },
 ]);
 
 export const LANDMARKS = Object.freeze({ nicks: { x: 3200, width: 612 } });
@@ -44,7 +44,7 @@ export function buildBloomingtonForeground() {
     ground: GROUND,
     props,
     backProps: props.filter(({ plane }) => plane === "back"),
-    frontProps: props.filter(({ plane }) => plane === "walk"),
+    frontProps: props.filter(({ plane }) => plane === "curb"),
     endSourceX: LANDMARKS.nicks.x + LANDMARKS.nicks.width,
   };
 }

@@ -13,13 +13,14 @@ import {
 
 test("Bloomington proof uses the shared source geometry", () => {
   assert.deepEqual(ART, { width: 1906, height: 825, groundLine: 735 });
+  assert.deepEqual(GROUND_PLANES, { back: 665, walk: 735, curb: 765 });
   assert.equal(GROUND.width, 3812);
   assert.equal(GROUND.height, 160);
   assert.equal(GROUND.topSourceY, 665);
   assert.match(GROUND.path, /ground-strip\.png\?v=bloomington-1$/);
 });
 
-test("proof props partition exhaustively into back and walk depth", () => {
+test("proof props partition exhaustively into back and curb depth", () => {
   const scene = buildBloomingtonForeground();
   const all = scene.props.map(({ id }) => id).sort();
   const partition = [...scene.backProps, ...scene.frontProps]
@@ -28,7 +29,9 @@ test("proof props partition exhaustively into back and walk depth", () => {
 
   assert.deepEqual(partition, all);
   assert.ok(scene.backProps.every(({ plane }) => plane === "back"));
-  assert.ok(scene.frontProps.every(({ plane }) => plane === "walk"));
+  assert.ok(scene.frontProps.every(({ plane }) => plane === "curb"));
+  assert.ok(PROPS.every(({ plane }) => plane === "curb"));
+  assert.ok(scene.frontProps.every(({ groundY }) => groundY === 765));
   assert.ok(scene.backProps.every(({ assetId }) => assetId !== "student-pair"));
   assert.ok(!Object.hasOwn(ASSETS, "student-pair"));
   assert.ok(PROPS.every(({ id }) => id !== "kelley-students"));
