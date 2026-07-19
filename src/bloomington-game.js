@@ -28,6 +28,7 @@ const CHAPTER_LAYERS = Object.freeze([
       "assets/backgrounds/bloomington-proof/environment-02.png?v=bloomington-1",
     ],
     factor: 0.38,
+    offsetYs: [0, -70],
   },
 ]);
 const FOREGROUND = buildBloomingtonForeground();
@@ -190,6 +191,7 @@ function drawScene(images, cameraX) {
       world.scale,
       ART.groundLine,
       world.floorY,
+      layer.offsetYs,
     );
     transforms.forEach((transform, index) => {
       context.drawImage(

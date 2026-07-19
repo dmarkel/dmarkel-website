@@ -31,6 +31,11 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         self.assertIn("width: FOREGROUND.endSourceX * scene.scale", source)
         self.assertNotIn("width: scene.width * 2", source)
 
+    def test_kirkwood_environment_is_raised_to_the_visible_street_grade(self):
+        source = (ROOT / "src/bloomington-game.js").read_text()
+        self.assertIn("offsetYs: [0, -70]", source)
+        self.assertIn("layer.offsetYs", source)
+
     def test_avatar_is_painted_between_back_and_walk_props(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
         back = "drawProps(images, FOREGROUND.backProps, cameraX);"
