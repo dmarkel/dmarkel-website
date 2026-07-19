@@ -9,7 +9,10 @@ import re
 
 from PIL import Image, ImageChops
 
-from tools.extract_connected_chroma import extract_connected_chroma
+try:
+    from tools.extract_connected_chroma import extract_connected_chroma
+except ModuleNotFoundError:
+    from extract_connected_chroma import extract_connected_chroma
 
 
 Color = tuple[int, int, int]

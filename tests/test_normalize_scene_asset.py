@@ -1,4 +1,7 @@
+import subprocess
+import sys
 import unittest
+from pathlib import Path
 
 from PIL import Image, ImageDraw
 
@@ -11,6 +14,18 @@ from tools.normalize_scene_asset import (
 
 
 class NormalizeSceneAssetTests(unittest.TestCase):
+    def test_script_entrypoint_imports_sibling_tool_from_repo_root(self):
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run(
+            [sys.executable, "tools/normalize_scene_asset.py", "--help"],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("--key-color", result.stdout)
+
     def test_cover_resize_preserves_target_aspect_without_stretching(self):
         source = Image.new("RGB", (200, 200), "#223344")
         result = cover_resize(source, 400, 100)
