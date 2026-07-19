@@ -22,9 +22,7 @@ PROP_SPECS = {
     "newspaper-box": (80, 108, 107),
     "parking-meter": (45, 118, 117),
     "bike-rack": (80, 88, 87),
-    "student-pair": (150, 150, 149),
 }
-BACK_PROPS = (("student-pair", 1280, 665),)
 FRONT_PROPS = (
     ("bench", 520, 735),
     ("campus-lamp", 930, 735),
@@ -56,10 +54,8 @@ def build_scene(avatar_x: int) -> Image.Image:
     scene.alpha_composite(load("far-01.png"), (0, 0))
     scene.alpha_composite(load("far-02.png"), (1906, 0))
     scene.alpha_composite(load("environment-01-v2.png"), (0, 0))
-    scene.alpha_composite(load("environment-02.png"), (1906, 0))
+    scene.alpha_composite(load("environment-02-v2.png"), (1906, -70))
     scene.alpha_composite(load("ground-strip.png"), (0, 665))
-    for prop in BACK_PROPS:
-        paste_prop(scene, *prop)
     paste_avatar(scene, avatar_x)
     for prop in FRONT_PROPS:
         paste_prop(scene, *prop)
@@ -85,7 +81,8 @@ def main() -> None:
     checkpoints = (
         (120, 250, "Kelley center"),
         (1711, 1850, "safe panel join"),
-        (1870, 2050, "campus to Kirkwood"),
+        (1985, 2170, "Sample Gates"),
+        (2710, 2890, "Kirkwood grade"),
         (3422, 3500, "Nick's and endpoint"),
     )
     cards = []
