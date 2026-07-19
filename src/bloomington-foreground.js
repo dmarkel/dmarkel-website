@@ -17,11 +17,9 @@ export const ASSETS = Object.freeze({
   "newspaper-box": { path: revision("newspaper-box.png"), width: 80, height: 108, baseY: 107 },
   "parking-meter": { path: revision("parking-meter.png"), width: 45, height: 118, baseY: 117 },
   "bike-rack": { path: revision("bike-rack.png"), width: 80, height: 88, baseY: 87 },
-  "student-pair": { path: revision("student-pair.png"), width: 150, height: 150, baseY: 149 },
 });
 
 export const PROPS = Object.freeze([
-  { id: "kelley-students", assetId: "student-pair", x: 1280, plane: "back" },
   { id: "campus-bench", assetId: "bench", x: 520, plane: "walk" },
   { id: "campus-lamp", assetId: "campus-lamp", x: 930, plane: "walk" },
   { id: "campus-planter", assetId: "planter", x: 1450, plane: "walk" },

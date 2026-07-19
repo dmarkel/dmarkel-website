@@ -29,7 +29,9 @@ test("proof props partition exhaustively into back and walk depth", () => {
   assert.deepEqual(partition, all);
   assert.ok(scene.backProps.every(({ plane }) => plane === "back"));
   assert.ok(scene.frontProps.every(({ plane }) => plane === "walk"));
-  assert.ok(scene.backProps.some(({ assetId }) => assetId === "student-pair"));
+  assert.ok(scene.backProps.every(({ assetId }) => assetId !== "student-pair"));
+  assert.ok(!Object.hasOwn(ASSETS, "student-pair"));
+  assert.ok(PROPS.every(({ id }) => id !== "kelley-students"));
   for (const id of [
     "bench", "campus-lamp", "planter", "newspaper-box",
     "parking-meter", "bike-rack",
