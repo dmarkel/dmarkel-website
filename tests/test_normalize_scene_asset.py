@@ -1,0 +1,52 @@
+import unittest
+
+from PIL import Image, ImageDraw
+
+from tools.normalize_scene_asset import (
+    cover_resize,
+    normalize_keyed,
+    normalize_opaque,
+    trim_dark_matte,
+)
+
+
+class NormalizeSceneAssetTests(unittest.TestCase):
+    def test_cover_resize_preserves_target_aspect_without_stretching(self):
+        source = Image.new("RGB", (200, 200), "#223344")
+        result = cover_resize(source, 400, 100)
+        self.assertEqual(result.size, (400, 100))
+
+    def test_dark_matte_is_removed_from_a_wide_generated_strip(self):
+        source = Image.new("RGB", (300, 200), "#000000")
+        ImageDraw.Draw(source).rectangle((0, 70, 299, 129), fill="#b8a98f")
+        result = trim_dark_matte(source)
+        self.assertEqual(result.size, (300, 60))
+        self.assertGreater(min(result.convert("RGB").getpixel((10, 10))), 24)
+
+    def test_empty_dark_matte_is_rejected(self):
+        source = Image.new("RGB", (20, 20), "#000000")
+        with self.assertRaisesRegex(ValueError, "no non-matte pixels"):
+            trim_dark_matte(source)
+
+    def test_opaque_normalization_forces_full_alpha(self):
+        source = Image.new("RGBA", (10, 10), (50, 80, 100, 30))
+        result = normalize_opaque(source, (20, 10), trim_matte=False)
+        self.assertEqual(result.size, (20, 10))
+        self.assertEqual(result.getchannel("A").getextrema(), (255, 255))
+
+    def test_keyed_normalization_has_binary_alpha_and_clear_border(self):
+        source = Image.new("RGB", (20, 20), "#ff00ff")
+        ImageDraw.Draw(source).rectangle((5, 4, 14, 19), fill="#375461")
+        result = normalize_keyed(source, (20, 20), (255, 0, 255), 35)
+
+        self.assertLessEqual(set(result.getchannel("A").getdata()), {0, 255})
+        for x in range(20):
+            self.assertEqual(result.getpixel((x, 0))[3], 0)
+            self.assertEqual(result.getpixel((x, 19))[3], 0)
+        for y in range(20):
+            self.assertEqual(result.getpixel((0, y))[3], 0)
+            self.assertEqual(result.getpixel((19, y))[3], 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
