@@ -26,12 +26,25 @@ export function groundTileTransforms(
   return transforms;
 }
 
-export function propTransform(prop, imageWidth, imageHeight, cameraX, scale, sceneY) {
+export function propTransform(
+  prop,
+  imageWidth,
+  imageHeight,
+  cameraX,
+  scale,
+  sceneY,
+  visualScale = scale,
+) {
+  if (!Number.isFinite(visualScale) || visualScale <= 0) {
+    throw new RangeError(`Invalid prop visual scale: ${visualScale}`);
+  }
+  const positionedWidth = imageWidth * scale;
+  const width = imageWidth * visualScale;
   return {
-    x: prop.x * scale - cameraX,
-    y: sceneY + prop.groundY * scale - prop.baseY * scale,
-    width: imageWidth * scale,
-    height: imageHeight * scale,
+    x: prop.x * scale - cameraX - (width - positionedWidth) / 2,
+    y: sceneY + prop.groundY * scale - prop.baseY * visualScale,
+    width,
+    height: imageHeight * visualScale,
     mirror: Boolean(prop.mirror),
   };
 }

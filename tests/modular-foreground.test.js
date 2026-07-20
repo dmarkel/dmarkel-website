@@ -28,6 +28,39 @@ test("prop base anchor maps to the shared source ground line", () => {
   assert.equal(transform.y + 180 * 1.25, -40 + 665 * 1.25);
 });
 
+test("prop visual scale preserves its world center and ground anchor", () => {
+  const transform = propTransform(
+    { x: 2200, baseY: 180, groundY: 665, mirror: false },
+    120,
+    200,
+    1900,
+    1.25,
+    -40,
+    1.5,
+  );
+  const originalLeft = 2200 * 1.25 - 1900;
+  const originalWidth = 120 * 1.25;
+  assert.equal(transform.x + transform.width / 2, originalLeft + originalWidth / 2);
+  assert.equal(transform.y + 180 * 1.5, -40 + 665 * 1.25);
+  assert.equal(transform.width, 180);
+  assert.equal(transform.height, 300);
+});
+
+test("prop transform rejects invalid visual scale", () => {
+  assert.throws(
+    () => propTransform(
+      { x: 0, baseY: 0, groundY: 0 },
+      1,
+      1,
+      0,
+      1,
+      0,
+      0,
+    ),
+    /visual scale/,
+  );
+});
+
 test("fence run has explicit start gate and end components", () => {
   const props = expandFenceRun(
     { id: "lamar", startX: 100, endX: 1300, gateX: 620, groundY: 665 },
