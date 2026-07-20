@@ -1,6 +1,6 @@
 # Bloomington 2007 Memory Scene Design
 
-**Status:** Approved for proof-slice planning
+**Status:** Approved for full-production continuation
 
 **Date:** 2026-07-18
 
@@ -279,6 +279,17 @@ If a required asset fails to load or violates a manifest contract, the review ro
 7. Version all changed module and bitmap URLs.
 8. Deploy only after explicit final scene approval.
 9. Verify the public route serves the expected commit and versioned assets.
+
+## Full-Production Continuation Approval
+
+The animated Kelley-to-Kirkwood proof was approved on 2026-07-20. Full production continues from the complete Nick's English Hut endpoint through two additional 1906 × 825 authored environment regions:
+
+1. a complete period-appropriate Kirkwood continuation containing Kilroy's, Buskirk-Chumley, supporting shops, and an edge-safe tree-lined departure buffer;
+2. a Memorial Stadium arrival containing the complete graduation landmark and all commencement activity.
+
+The new boundary uses at least 128 source pixels of open sky, low landscaping, path, or small repeatable detail on both sides. No storefront, sign, awning, vehicle, large tree, stadium structure, or graduation group crosses it. The current Kelley, Sample Gates, Nick's, foreground props, walking line, avatar, and controls remain unchanged.
+
+The continuation extends the far layer with two unique opaque spring-sky panels and extends the ground into a continuous Kirkwood-to-stadium plaza strip. The stadium's complete right architectural edge defines the new world endpoint; the number or nominal width of panels does not create empty travel beyond that edge.
 
 ## Non-Goals
 
