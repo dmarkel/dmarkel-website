@@ -289,7 +289,7 @@ The animated Kelley-to-Kirkwood proof was approved on 2026-07-20. Full productio
 
 The new boundary uses at least 128 source pixels of open sky, low landscaping, path, or small repeatable detail on both sides. No storefront, sign, awning, vehicle, large tree, stadium structure, or graduation group crosses it. The current Kelley, Sample Gates, Nick's, foreground props, walking line, avatar, and controls remain unchanged.
 
-The continuation extends the far layer with two unique opaque spring-sky panels and extends the ground into a continuous Kirkwood-to-stadium plaza strip. The stadium's complete right architectural edge defines the new world endpoint; the number or nominal width of panels does not create empty travel beyond that edge.
+The existing two-panel opaque far panorama already covers the expanded 7624-pixel world at the approved 12% camera factor, so it remains unchanged and does not repeat. The continuation extends the ground into one continuous Kirkwood-to-stadium plaza strip. The stadium's complete right architectural edge defines the new world endpoint; the number or nominal width of panels does not create empty travel beyond that edge.
 
 ## Non-Goals
 
