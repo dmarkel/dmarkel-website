@@ -29,3 +29,15 @@ The car is baked into `environment-02-v3.png`. The shared ground strip is painte
 - Existing transparency, geometry, endpoint, depth-order, and route-isolation tests remain green.
 - Portrait and landscape browser checks cover the Sample Gates, planter occlusion, jumping, and the far-right endpoint.
 
+## Final Flower-Box Removal Approval
+
+After reviewing the completed Bloomington chapter, the owner approved the scene
+with one final change: remove the freestanding Kelley flower-box prop entirely.
+This refers only to the manifest entry `campus-planter` at source x=1450. The
+generated campus landscaping, the stadium graduation planters, the sidewalk,
+avatar, physics, depth order, and every other curb prop remain unchanged.
+
+The `planter.png` source asset may remain in the reusable scene pack, but the
+Bloomington foreground manifest must not instantiate it. A regression test must
+assert that `campus-planter` is absent, and the public route must use a new module
+cache revision so mobile browsers cannot reuse the prior manifest.
