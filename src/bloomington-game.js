@@ -1,5 +1,5 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-4";
+import { ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-6";
 import { createInput } from "./input.js";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=bloomington-5";
 import { createCamera, stepCamera } from "./parallax.js";
@@ -25,7 +25,7 @@ const CHAPTER_LAYERS = Object.freeze([
     name: "environment",
     paths: [
       "assets/backgrounds/bloomington-proof/environment-01-v2.png?v=bloomington-2",
-      "assets/backgrounds/bloomington-proof/environment-02-v3.png?v=bloomington-5",
+      "assets/backgrounds/bloomington-proof/environment-02-v4.png?v=bloomington-6",
     ],
     factor: 0.38,
     offsetYs: [0, -54],

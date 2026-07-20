@@ -22,7 +22,7 @@ export const ASSETS = Object.freeze({
 export const PROPS = Object.freeze([
   { id: "campus-bench", assetId: "bench", x: 520, plane: "curb" },
   { id: "campus-lamp", assetId: "campus-lamp", x: 930, plane: "curb" },
-  { id: "campus-planter", assetId: "planter", x: 1450, plane: "curb" },
+  { id: "campus-planter", assetId: "planter", x: 1450, plane: "curb", groundOffset: 24 },
   { id: "kirkwood-news", assetId: "newspaper-box", x: 2250, plane: "curb" },
   { id: "kirkwood-meter", assetId: "parking-meter", x: 2580, plane: "curb" },
   { id: "kirkwood-rack", assetId: "bike-rack", x: 2910, plane: "curb" },
@@ -35,7 +35,12 @@ function groundProp(prop) {
   const groundY = GROUND_PLANES[prop.plane];
   if (!asset) throw new Error(`Unknown Bloomington asset: ${prop.assetId}`);
   if (groundY === undefined) throw new Error(`Unknown Bloomington depth plane: ${prop.plane}`);
-  return { ...prop, baseY: asset.baseY, groundY, mirror: Boolean(prop.mirror) };
+  return {
+    ...prop,
+    baseY: asset.baseY,
+    groundY: groundY + (prop.groundOffset ?? 0),
+    mirror: Boolean(prop.mirror),
+  };
 }
 
 export function buildBloomingtonForeground() {

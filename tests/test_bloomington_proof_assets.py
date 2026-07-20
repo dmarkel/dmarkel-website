@@ -8,7 +8,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 FAR = ("far-01.png", "far-02.png")
-ENVIRONMENT = ("environment-01-v2.png", "environment-02-v3.png")
+ENVIRONMENT = ("environment-01-v2.png", "environment-02-v4.png")
+CAR_PATCH_BOX = (670, 610, 890, 725)
 GROUND = "ground-strip.png"
 PROPS = {
     "bench.png": (150, 96),
@@ -106,7 +107,7 @@ class BloomingtonProofAssetTests(unittest.TestCase):
         )
 
     def test_sample_gates_are_complete_inside_the_transition(self):
-        pixels = np.asarray(open_rgba("environment-02-v3.png"))
+        pixels = np.asarray(open_rgba("environment-02-v4.png"))
         alpha = pixels[:, :, 3] > 0
         left_gate = alpha[350:735, 260:520]
         right_gate = alpha[350:735, 580:840]
@@ -116,7 +117,7 @@ class BloomingtonProofAssetTests(unittest.TestCase):
 
     def test_grade_corrected_panel_preserves_gates_and_lowers_kirkwood(self):
         source = open_rgba("environment-02-v2.png")
-        corrected = open_rgba("environment-02-v3.png")
+        corrected = open_rgba("environment-02-v4.png")
         source_gates = opaque_bounds(source, (128, 0, 815, 825))
         fixed_gates = opaque_bounds(corrected, (128, 0, 815, 825))
         source_kirkwood = opaque_bounds(source, (815, 0, 1906, 825))
@@ -126,6 +127,37 @@ class BloomingtonProofAssetTests(unittest.TestCase):
         self.assertEqual(fixed_gates[3] - 54, source_gates[3] - 70)
         self.assertEqual(fixed_kirkwood, source_kirkwood)
         self.assertEqual(fixed_kirkwood[3] - 54, 665)
+
+    def test_sample_gates_car_is_removed_without_changing_the_rest_of_the_panel(self):
+        approved = np.asarray(open_rgba("environment-02-v3.png"))
+        corrected = np.asarray(open_rgba("environment-02-v4.png"))
+        left, top, right, bottom = CAR_PATCH_BOX
+        outside = np.ones(approved.shape[:2], dtype=bool)
+        outside[top:bottom, left:right] = False
+        self.assertTrue(
+            np.array_equal(corrected[outside], approved[outside]),
+            "car removal must not redraw pixels outside its bounded patch",
+        )
+
+        car_box = corrected[645:720, 700:870].astype(np.int16)
+        red, green, blue, alpha = (
+            car_box[:, :, 0],
+            car_box[:, :, 1],
+            car_box[:, :, 2],
+            car_box[:, :, 3],
+        )
+        maroon_car = (
+            (alpha > 0)
+            & (red > 70)
+            & (blue > 45)
+            & (red > green * 1.25)
+            & (blue > green * 1.10)
+        )
+        self.assertLess(
+            float(maroon_car.mean()),
+            0.02,
+            "the split maroon car remains visible at the Sample Gates",
+        )
 
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)

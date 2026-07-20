@@ -9,16 +9,16 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_route_exists_and_uses_bloomington_cache_key(self):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 proof", html)
-        self.assertIn("bloomington-game.js?v=bloomington-5", html)
+        self.assertIn("bloomington-game.js?v=bloomington-6", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn('from "./bloomington-foreground.js?v=bloomington-4"', source)
+        self.assertIn('from "./bloomington-foreground.js?v=bloomington-6"', source)
         self.assertIn('from "./modular-foreground.js?v=bloomington-5"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
         self.assertIn(
-            "assets/backgrounds/bloomington-proof/environment-02-v3.png?v=bloomington-5",
+            "assets/backgrounds/bloomington-proof/environment-02-v4.png?v=bloomington-6",
             source,
         )
         self.assertNotIn(

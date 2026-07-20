@@ -31,7 +31,10 @@ test("proof props partition exhaustively into back and curb depth", () => {
   assert.ok(scene.backProps.every(({ plane }) => plane === "back"));
   assert.ok(scene.frontProps.every(({ plane }) => plane === "curb"));
   assert.ok(PROPS.every(({ plane }) => plane === "curb"));
-  assert.ok(scene.frontProps.every(({ groundY }) => groundY === 765));
+  const planter = scene.frontProps.find(({ id }) => id === "campus-planter");
+  const otherCurbProps = scene.frontProps.filter(({ id }) => id !== "campus-planter");
+  assert.equal(planter.groundY, 789);
+  assert.ok(otherCurbProps.every(({ groundY }) => groundY === 765));
   assert.ok(scene.backProps.every(({ assetId }) => assetId !== "student-pair"));
   assert.ok(!Object.hasOwn(ASSETS, "student-pair"));
   assert.ok(PROPS.every(({ id }) => id !== "kelley-students"));
@@ -47,7 +50,11 @@ test("every prop is grounded from its declared asset baseline", () => {
   const scene = buildBloomingtonForeground();
   for (const prop of scene.props) {
     assert.equal(prop.baseY, ASSETS[prop.assetId].baseY, prop.id);
-    assert.equal(prop.groundY, GROUND_PLANES[prop.plane], prop.id);
+    assert.equal(
+      prop.groundY,
+      GROUND_PLANES[prop.plane] + (prop.groundOffset ?? 0),
+      prop.id,
+    );
     assert.ok(prop.x >= 0, prop.id);
     assert.ok(prop.x + ASSETS[prop.assetId].width <= 3812, prop.id);
   }

@@ -28,7 +28,7 @@ PROP_SPECS = {
 FRONT_PROPS = (
     ("bench", 520, CURB_Y),
     ("campus-lamp", 930, CURB_Y),
-    ("planter", 1450, CURB_Y),
+    ("planter", 1450, CURB_Y + 24),
     ("newspaper-box", 2250, CURB_Y),
     ("parking-meter", 2580, CURB_Y),
     ("bike-rack", 2910, CURB_Y),
@@ -64,7 +64,7 @@ def build_scene(avatar_x: int) -> Image.Image:
     scene.alpha_composite(load("far-01.png"), (0, 0))
     scene.alpha_composite(load("far-02.png"), (1906, 0))
     scene.alpha_composite(load("environment-01-v2.png"), (0, 0))
-    scene.alpha_composite(load("environment-02-v3.png"), (1906, -54))
+    scene.alpha_composite(load("environment-02-v4.png"), (1906, -54))
     scene.alpha_composite(load("ground-strip.png"), (0, 665))
     paste_avatar(scene, avatar_x)
     for prop in FRONT_PROPS:
