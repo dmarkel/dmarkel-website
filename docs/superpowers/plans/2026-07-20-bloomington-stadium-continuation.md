@@ -29,7 +29,7 @@
 
 **Interfaces:**
 - Consumes: `open_rgba(name)`, `buildBloomingtonForeground()`, `CHAPTER_LAYERS`, and `LANDMARKS`.
-- Produces: failing tests for environment panels 03/04, the 7624-pixel ground, four environment paths, four offset values, stadium endpoint geometry, and revision 7 cache keys.
+- Produces: failing tests for environment panels 03/04, the 7624-pixel ground, four environment paths, four offset values, stadium endpoint geometry, and final revision 8 cache keys.
 
 - [ ] **Step 1: Write failing asset tests**
 
@@ -37,7 +37,7 @@ Require `environment-03.png` and `environment-04.png` at 1906 × 825, binary alp
 
 - [ ] **Step 2: Write failing route and endpoint tests**
 
-Require four environment paths with `offsetYs: [0, -54, -54, -54]`, `bloomington-7`, and `LANDMARKS.stadium.x + LANDMARKS.stadium.width === buildBloomingtonForeground().endSourceX` where the endpoint is no greater than 7624.
+Require four environment paths with `offsetYs: [0, -54, -54, -54]`, final QA revision `bloomington-8`, and `LANDMARKS.stadium.x + LANDMARKS.stadium.width === buildBloomingtonForeground().endSourceX` where the endpoint is no greater than 7624.
 
 - [ ] **Step 3: Run focused tests and verify RED**
 
@@ -45,7 +45,7 @@ Run: `node --test tests/bloomington-foreground.test.js`
 
 Run: `python3 -m unittest tests.test_bloomington_proof_assets tests.test_bloomington_route_config -v`
 
-Expected: FAIL because the continuation assets, stadium endpoint, and revision 7 do not exist.
+Expected: FAIL because the continuation assets, stadium endpoint, and revision 8 do not exist.
 
 ### Task 2: Generate and normalize the two continuation panels
 
@@ -115,7 +115,7 @@ Set `GROUND.path` to revisioned `ground-strip-v2.png`, `GROUND.width` to 7624, p
 
 - [ ] **Step 2: Extend runtime layers and copy**
 
-Append environment panels 03 and 04, set `offsetYs: [0, -54, -54, -54]`, retain the two existing far panels, update the masthead to `Bloomington · 2007 chapter` and `Kelley to Memorial Stadium.`, and advance all changed Bloomington module/image URLs to `bloomington-7`.
+Append environment panels 03 and 04, set `offsetYs: [0, -54, -54, -54]`, retain the two existing far panels, update the masthead to `Bloomington · 2007 chapter` and `Kelley to Memorial Stadium.`, and advance all changed Bloomington module/image URLs to final QA revision `bloomington-8`.
 
 - [ ] **Step 3: Run focused route tests and verify GREEN**
 
@@ -123,7 +123,7 @@ Run: `node --test tests/bloomington-foreground.test.js tests/scene-geometry.test
 
 Run: `python3 -m unittest tests.test_bloomington_route_config -v`
 
-Expected: the four-panel route, unchanged far panorama, 7624 ground, stadium-derived endpoint, and revision 7 checks pass.
+Expected: the four-panel route, unchanged far panorama, 7624 ground, stadium-derived endpoint, and revision 8 checks pass.
 
 ### Task 5: Full-scene atlas, browser QA, and publication
 
@@ -132,7 +132,7 @@ Expected: the four-panel route, unchanged far panorama, 7624 ground, stadium-der
 
 **Interfaces:**
 - Consumes: all four environment panels, the full ground strip, current props, and stadium endpoint.
-- Produces: a full-route atlas and the deployed revision 7 chapter.
+- Produces: a full-route atlas and the deployed revision 8 chapter.
 
 - [ ] **Step 1: Expand the atlas**
 
@@ -158,5 +158,4 @@ At 390 × 844, walk the complete route through every landmark and endpoint. At 8
 
 - [ ] **Step 5: Commit and publish**
 
-Commit only scoped files, push `main`, wait for GitHub Pages to build the exact commit, and verify the revision 7 HTML, JavaScript, ground, environment-03, and environment-04 resources return HTTP 200 and match local files.
-
+Commit only scoped files, push `main`, wait for GitHub Pages to build the exact commit, and verify the revision 8 HTML, JavaScript, ground, environment-03, and environment-04 resources return HTTP 200 and match local files.

@@ -8,12 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_route_exists_and_uses_bloomington_cache_key(self):
         html = (ROOT / "bloomington.html").read_text()
-        self.assertIn("Bloomington · 2007 proof", html)
-        self.assertIn("bloomington-game.js?v=bloomington-6", html)
+        self.assertIn("Bloomington · 2007 chapter", html)
+        self.assertIn("Kelley to Memorial Stadium.", html)
+        self.assertIn("bloomington-game.js?v=bloomington-8", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn('from "./bloomington-foreground.js?v=bloomington-6"', source)
+        self.assertIn('from "./bloomington-foreground.js?v=bloomington-8"', source)
         self.assertIn('from "./modular-foreground.js?v=bloomington-5"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
@@ -21,6 +22,16 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
             "assets/backgrounds/bloomington-proof/environment-02-v4.png?v=bloomington-6",
             source,
         )
+        self.assertIn(
+            "assets/backgrounds/bloomington-proof/environment-03.png?v=bloomington-8",
+            source,
+        )
+        self.assertIn(
+            "assets/backgrounds/bloomington-proof/environment-04.png?v=bloomington-8",
+            source,
+        )
+        self.assertIn("offsetYs: [0, -54, -54, -54]", source)
+        self.assertIn('ground-strip-v2.png?v=bloomington-8', (ROOT / "src/bloomington-foreground.js").read_text())
         self.assertNotIn(
             '"assets/backgrounds/bloomington-proof/environment-02.png',
             source,
@@ -34,14 +45,16 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         self.assertIn("assets/avatar/avatar-walk-right.png", source)
         self.assertIn("assets/avatar/avatar-jump-right.png", source)
 
-    def test_world_ends_at_nicks_manifest_edge(self):
+    def test_world_ends_at_stadium_manifest_edge(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
         self.assertIn("width: FOREGROUND.endSourceX * scene.scale", source)
         self.assertNotIn("width: scene.width * 2", source)
+        foreground = (ROOT / "src/bloomington-foreground.js").read_text()
+        self.assertIn("LANDMARKS.stadium.x + LANDMARKS.stadium.width", foreground)
 
     def test_kirkwood_environment_meets_the_visible_street_grade(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn("offsetYs: [0, -54]", source)
+        self.assertIn("offsetYs: [0, -54, -54, -54]", source)
         self.assertIn("layer.offsetYs", source)
 
     def test_curb_props_use_the_avatar_visual_scale(self):

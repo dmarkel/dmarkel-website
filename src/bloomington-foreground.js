@@ -4,8 +4,8 @@ const revision = (name) => `${ROOT}/${name}?v=bloomington-1`;
 export const ART = Object.freeze({ width: 1906, height: 825, groundLine: 735 });
 export const GROUND_PLANES = Object.freeze({ back: 665, walk: 735, curb: 765 });
 export const GROUND = Object.freeze({
-  path: revision("ground-strip.png"),
-  width: 3812,
+  path: `${ROOT}/ground-strip-v2.png?v=bloomington-8`,
+  width: 7624,
   height: 160,
   topSourceY: 665,
 });
@@ -28,7 +28,10 @@ export const PROPS = Object.freeze([
   { id: "kirkwood-rack", assetId: "bike-rack", x: 2910, plane: "curb" },
 ]);
 
-export const LANDMARKS = Object.freeze({ nicks: { x: 3200, width: 612 } });
+export const LANDMARKS = Object.freeze({
+  nicks: { x: 3200, width: 612 },
+  stadium: { x: 5718, width: 1906 },
+});
 
 function groundProp(prop) {
   const asset = ASSETS[prop.assetId];
@@ -50,6 +53,6 @@ export function buildBloomingtonForeground() {
     props,
     backProps: props.filter(({ plane }) => plane === "back"),
     frontProps: props.filter(({ plane }) => plane === "curb"),
-    endSourceX: LANDMARKS.nicks.x + LANDMARKS.nicks.width,
+    endSourceX: LANDMARKS.stadium.x + LANDMARKS.stadium.width,
   };
 }

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 AVATAR = ROOT / "assets" / "avatar" / "avatar-walk-right.png"
 OUTPUT = ROOT / "tmp" / "imagegen" / "bloomington-proof" / "proof-atlas.png"
-WORLD_SIZE = (3812, 825)
+WORLD_SIZE = (7624, 825)
 GROUND_Y = 735
 CURB_Y = 765
 VISUAL_SCALE = 1.5
@@ -61,11 +61,14 @@ def paste_avatar(scene: Image.Image, x: int) -> None:
 
 def build_scene(avatar_x: int) -> Image.Image:
     scene = Image.new("RGBA", WORLD_SIZE, "#8ed6f0")
-    scene.alpha_composite(load("far-01.png"), (0, 0))
-    scene.alpha_composite(load("far-02.png"), (1906, 0))
+    for x in (0, 3812):
+        scene.alpha_composite(load("far-01.png"), (x, 0))
+        scene.alpha_composite(load("far-02.png"), (x + 1906, 0))
     scene.alpha_composite(load("environment-01-v2.png"), (0, 0))
     scene.alpha_composite(load("environment-02-v4.png"), (1906, -54))
-    scene.alpha_composite(load("ground-strip.png"), (0, 665))
+    scene.alpha_composite(load("environment-03.png"), (3812, -54))
+    scene.alpha_composite(load("environment-04.png"), (5718, -54))
+    scene.alpha_composite(load("ground-strip-v2.png"), (0, 665))
     paste_avatar(scene, avatar_x)
     for prop in FRONT_PROPS:
         paste_prop(scene, *prop)
@@ -93,17 +96,21 @@ def main() -> None:
         (1711, 1850, "safe panel join"),
         (1985, 2170, "Sample Gates"),
         (2710, 2890, "Kirkwood grade"),
-        (3422, 3500, "Nick's and endpoint"),
+        (3422, 3500, "Nick's"),
+        (4300, 4470, "Buskirk-Chumley"),
+        (5525, 5700, "quiet stadium join"),
+        (6300, 6480, "graduation arrival"),
+        (7234, 7420, "stadium endpoint"),
     )
     cards = []
     for crop_x, avatar_x, label in checkpoints:
         cards.append(labeled_crop(build_scene(avatar_x), crop_x, label))
 
     panorama = build_scene(1130).convert("RGB")
-    panorama.thumbnail((1600, 347), Image.Resampling.NEAREST)
+    panorama.thumbnail((3000, 347), Image.Resampling.NEAREST)
     margin = 24
     card_gap = 14
-    atlas_width = max(1600 + margin * 2, sum(card.width for card in cards) + card_gap * 3 + margin * 2)
+    atlas_width = max(3000 + margin * 2, sum(card.width for card in cards) + card_gap * (len(cards) - 1) + margin * 2)
     atlas_height = panorama.height + cards[0].height + margin * 3
     atlas = Image.new("RGB", (atlas_width, atlas_height), "#091d22")
     atlas.paste(panorama, ((atlas_width - panorama.width) // 2, margin))

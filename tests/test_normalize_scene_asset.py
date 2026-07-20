@@ -6,6 +6,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from tools.normalize_scene_asset import (
+    align_visible_bottom,
+    align_visible_band_right,
     align_visible_right,
     cover_resize,
     normalize_keyed,
@@ -98,6 +100,32 @@ class NormalizeSceneAssetTests(unittest.TestCase):
 
         self.assertEqual(result.getpixel((19, 5))[3], 255)
         self.assertEqual(result.getpixel((3, 5))[3], 0)
+
+    def test_architecture_band_can_define_the_right_endpoint(self):
+        source = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((4, 2, 15, 12), fill="#375461")
+        draw.line((4, 18, 19, 18), fill="#375461")
+
+        result = align_visible_band_right(source, 14)
+
+        self.assertEqual(result.getpixel((19, 8))[3], 255)
+        self.assertEqual(result.getpixel((3, 8))[3], 0)
+
+    def test_visible_subject_can_be_aligned_to_a_shared_bottom_baseline(self):
+        source = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+        ImageDraw.Draw(source).rectangle((4, 2, 15, 11), fill="#375461")
+
+        result = align_visible_bottom(source, 14)
+
+        self.assertEqual(result.getchannel("A").getbbox(), (4, 5, 16, 15))
+
+    def test_bottom_alignment_rejects_an_out_of_bounds_baseline(self):
+        source = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+        ImageDraw.Draw(source).rectangle((4, 2, 15, 11), fill="#375461")
+
+        with self.assertRaisesRegex(ValueError, "visible bottom"):
+            align_visible_bottom(source, 20)
 
 
 if __name__ == "__main__":

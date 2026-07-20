@@ -122,6 +122,38 @@ def align_visible_right(image: Image.Image) -> Image.Image:
     return result
 
 
+def align_visible_band_right(image: Image.Image, band_bottom: int) -> Image.Image:
+    """Align a landmark band to the endpoint while ignoring low ground spill."""
+    source = image.convert("RGBA")
+    if not 0 < band_bottom <= source.height:
+        raise ValueError("band bottom must be inside the image")
+    bounds = source.getchannel("A").crop((0, 0, source.width, band_bottom)).getbbox()
+    if bounds is None:
+        raise ValueError("cannot align an image with no visible band pixels")
+    shift = source.width - bounds[2]
+    if shift == 0:
+        return source
+    result = Image.new("RGBA", source.size, (0, 0, 0, 0))
+    result.alpha_composite(source, (shift, 0))
+    return result
+
+
+def align_visible_bottom(image: Image.Image, visible_bottom: int) -> Image.Image:
+    """Shift a keyed subject so its last visible row matches a shared baseline."""
+    source = image.convert("RGBA")
+    if not 0 <= visible_bottom < source.height:
+        raise ValueError("visible bottom must be inside the image")
+    bounds = source.getchannel("A").getbbox()
+    if bounds is None:
+        raise ValueError("cannot align an image with no visible pixels")
+    shift = visible_bottom + 1 - bounds[3]
+    if shift == 0:
+        return source
+    result = Image.new("RGBA", source.size, (0, 0, 0, 0))
+    result.alpha_composite(source, (0, shift))
+    return result
+
+
 def _parse_color(value: str) -> Color:
     match = re.fullmatch(r"#?([0-9a-fA-F]{6})", value.strip())
     if not match:
@@ -142,6 +174,8 @@ def main() -> None:
     parser.add_argument("--binary-alpha", action="store_true")
     parser.add_argument("--transparent-border", type=int, default=2)
     parser.add_argument("--align-visible-right", action="store_true")
+    parser.add_argument("--align-visible-band-right", type=int)
+    parser.add_argument("--visible-bottom", type=int)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
@@ -170,8 +204,14 @@ def main() -> None:
                 args.tolerance,
                 transparent_border=args.transparent_border,
             )
+            if args.visible_bottom is not None:
+                result = align_visible_bottom(result, args.visible_bottom)
+            if args.align_visible_band_right is not None:
+                result = align_visible_band_right(result, args.align_visible_band_right)
             if args.align_visible_right:
                 result = align_visible_right(result)
+            if args.visible_bottom is not None:
+                result = align_visible_bottom(result, args.visible_bottom)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     result.save(output)

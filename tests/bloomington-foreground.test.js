@@ -14,10 +14,10 @@ import {
 test("Bloomington proof uses the shared source geometry", () => {
   assert.deepEqual(ART, { width: 1906, height: 825, groundLine: 735 });
   assert.deepEqual(GROUND_PLANES, { back: 665, walk: 735, curb: 765 });
-  assert.equal(GROUND.width, 3812);
+  assert.equal(GROUND.width, 7624);
   assert.equal(GROUND.height, 160);
   assert.equal(GROUND.topSourceY, 665);
-  assert.match(GROUND.path, /ground-strip\.png\?v=bloomington-1$/);
+  assert.match(GROUND.path, /ground-strip-v2\.png\?v=bloomington-8$/);
 });
 
 test("proof props partition exhaustively into back and curb depth", () => {
@@ -60,11 +60,13 @@ test("every prop is grounded from its declared asset baseline", () => {
   }
 });
 
-test("proof endpoint is the complete Nick's right edge", () => {
+test("full chapter endpoint is the complete Memorial Stadium right edge", () => {
   const scene = buildBloomingtonForeground();
   assert.deepEqual(LANDMARKS.nicks, { x: 3200, width: 612 });
-  assert.equal(scene.endSourceX, LANDMARKS.nicks.x + LANDMARKS.nicks.width);
-  assert.equal(scene.endSourceX, 3812);
+  assert.ok(LANDMARKS.stadium.x >= 5718);
+  assert.equal(scene.endSourceX, LANDMARKS.stadium.x + LANDMARKS.stadium.width);
+  assert.ok(scene.endSourceX <= 7624);
+  assert.ok(scene.endSourceX > LANDMARKS.nicks.x + LANDMARKS.nicks.width);
 });
 
 test("manifest ids and asset paths are valid and unique", () => {

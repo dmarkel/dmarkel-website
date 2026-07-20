@@ -8,9 +8,14 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 FAR = ("far-01.png", "far-02.png")
-ENVIRONMENT = ("environment-01-v2.png", "environment-02-v4.png")
+ENVIRONMENT = (
+    "environment-01-v2.png",
+    "environment-02-v4.png",
+    "environment-03.png",
+    "environment-04.png",
+)
 CAR_PATCH_BOX = (670, 610, 890, 725)
-GROUND = "ground-strip.png"
+GROUND = "ground-strip-v2.png"
 PROPS = {
     "bench.png": (150, 96),
     "campus-lamp.png": (64, 190),
@@ -74,6 +79,32 @@ class BloomingtonProofAssetTests(unittest.TestCase):
                 0.05,
                 f"environment seam side {index} contains a large upper object",
             )
+
+    def test_continuation_panels_share_grade_and_keep_their_join_edge_safe(self):
+        panel_three = np.asarray(open_rgba("environment-03.png"))
+        panel_four = np.asarray(open_rgba("environment-04.png"))
+        for name, pixels in (
+            ("environment-03.png", panel_three),
+            ("environment-04.png", panel_four),
+        ):
+            with self.subTest(name=name):
+                alpha = pixels[:, :, 3]
+                self.assertLessEqual(set(np.unique(alpha)), {0, 255})
+                self.assertEqual(int(np.nonzero(alpha > 0)[0].max()), 719)
+
+        seam_regions = (panel_three[:560, -128:, 3], panel_four[:560, :128, 3])
+        for index, alpha in enumerate(seam_regions, start=1):
+            self.assertLess(
+                float((alpha > 0).mean()),
+                0.05,
+                f"continuation seam side {index} contains a large upper object",
+            )
+
+        stadium_alpha = panel_four[:, :, 3]
+        self.assertGreater(float((stadium_alpha > 0).mean()), 0.20)
+        self.assertEqual(int(np.nonzero(stadium_alpha > 0)[1].max()), 1905)
+        facade_alpha = panel_four[:680, :, 3]
+        self.assertEqual(int(np.nonzero(facade_alpha > 0)[1].max()), 1905)
 
     def test_environment_panels_have_no_visible_magenta_contamination(self):
         for name in ENVIRONMENT:
@@ -161,8 +192,13 @@ class BloomingtonProofAssetTests(unittest.TestCase):
 
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)
-        self.assertEqual(image.size, (3812, 160))
+        self.assertEqual(image.size, (7624, 160))
         self.assertEqual(image.getchannel("A").getextrema(), (255, 255))
+
+    def test_full_ground_preserves_the_approved_existing_route(self):
+        approved = np.asarray(open_rgba("ground-strip.png"))
+        extended = np.asarray(open_rgba(GROUND))
+        self.assertTrue(np.array_equal(extended[:, :3812], approved))
 
     def test_ground_top_edge_contains_only_clean_pavement(self):
         pixels = np.asarray(open_rgba(GROUND))[:20, :, :3].astype(float)

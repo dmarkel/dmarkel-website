@@ -134,6 +134,13 @@ At maximum travel:
 - the avatar cannot enter an empty tail;
 - the complete final landmark remains visible and unchanged.
 
+Endpoint validation must measure the declared landmark edge, not the keyed asset's
+overall alpha bounds. A thin ground line, shadow, flower bed, or landscaping tail
+may extend beyond the architecture inside a generated bitmap and must not become
+the chapter anchor. For a building endpoint, test and align an upper architecture
+band separately from the ground band, then confirm the ground is clipped to the
+same world boundary.
+
 The same rule applies at the left endpoint when a chapter begins with a structure rather than open scenery.
 
 ## Artwork Production Workflow
@@ -182,6 +189,7 @@ Before opening the game, automated tests and review atlases must verify:
 - complete start/middle/gate/end structure runs;
 - no major object crossing an unsafe section boundary;
 - endpoint coordinates derived from the final landmark.
+- endpoint landmark-band bounds tested separately from low ground spill.
 
 The review atlas must include every authored seam, former panel boundary, fence endpoint, foreground prop class, transition zone, and chapter endpoint. Props are previewed both behind and in front of the avatar according to their declared depth.
 
