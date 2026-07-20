@@ -9,15 +9,16 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_route_exists_and_uses_bloomington_cache_key(self):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 proof", html)
-        self.assertIn("bloomington-game.js?v=bloomington-4", html)
+        self.assertIn("bloomington-game.js?v=bloomington-5", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
         self.assertIn('from "./bloomington-foreground.js?v=bloomington-4"', source)
+        self.assertIn('from "./modular-foreground.js?v=bloomington-5"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
         self.assertIn(
-            "assets/backgrounds/bloomington-proof/environment-02-v2.png?v=bloomington-3",
+            "assets/backgrounds/bloomington-proof/environment-02-v3.png?v=bloomington-5",
             source,
         )
         self.assertNotIn(
@@ -38,10 +39,14 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         self.assertIn("width: FOREGROUND.endSourceX * scene.scale", source)
         self.assertNotIn("width: scene.width * 2", source)
 
-    def test_kirkwood_environment_is_raised_to_the_visible_street_grade(self):
+    def test_kirkwood_environment_meets_the_visible_street_grade(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn("offsetYs: [0, -70]", source)
+        self.assertIn("offsetYs: [0, -54]", source)
         self.assertIn("layer.offsetYs", source)
+
+    def test_curb_props_use_the_avatar_visual_scale(self):
+        source = (ROOT / "src/bloomington-game.js").read_text()
+        self.assertIn("sceneY,\n      scale,", source)
 
     def test_avatar_is_painted_between_back_and_curb_props(self):
         source = (ROOT / "src/bloomington-game.js").read_text()

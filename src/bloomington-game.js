@@ -1,7 +1,7 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
 import { ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-4";
 import { createInput } from "./input.js";
-import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=bloomington-1";
+import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=bloomington-5";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
 import {
@@ -25,10 +25,10 @@ const CHAPTER_LAYERS = Object.freeze([
     name: "environment",
     paths: [
       "assets/backgrounds/bloomington-proof/environment-01-v2.png?v=bloomington-2",
-      "assets/backgrounds/bloomington-proof/environment-02-v2.png?v=bloomington-3",
+      "assets/backgrounds/bloomington-proof/environment-02-v3.png?v=bloomington-5",
     ],
     factor: 0.38,
-    offsetYs: [0, -70],
+    offsetYs: [0, -54],
   },
 ]);
 const FOREGROUND = buildBloomingtonForeground();
@@ -148,6 +148,7 @@ function drawProps(images, props, cameraX) {
       cameraX,
       world.scale,
       sceneY,
+      scale,
     );
     if (transform.x + transform.width < 0 || transform.x > viewport.width) continue;
     const image = images[`foreground-${prop.assetId}`];
