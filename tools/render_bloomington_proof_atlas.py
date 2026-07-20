@@ -14,6 +14,8 @@ AVATAR = ROOT / "assets" / "avatar" / "avatar-walk-right.png"
 OUTPUT = ROOT / "tmp" / "imagegen" / "bloomington-proof" / "proof-atlas.png"
 WORLD_SIZE = (3812, 825)
 GROUND_Y = 735
+CURB_Y = 765
+VISUAL_SCALE = 1.5
 
 PROP_SPECS = {
     "bench": (150, 96, 95),
@@ -24,12 +26,12 @@ PROP_SPECS = {
     "bike-rack": (80, 88, 87),
 }
 FRONT_PROPS = (
-    ("bench", 520, 735),
-    ("campus-lamp", 930, 735),
-    ("planter", 1450, 735),
-    ("newspaper-box", 2250, 735),
-    ("parking-meter", 2580, 735),
-    ("bike-rack", 2910, 735),
+    ("bench", 520, CURB_Y),
+    ("campus-lamp", 930, CURB_Y),
+    ("planter", 1450, CURB_Y),
+    ("newspaper-box", 2250, CURB_Y),
+    ("parking-meter", 2580, CURB_Y),
+    ("bike-rack", 2910, CURB_Y),
 )
 
 
@@ -40,13 +42,21 @@ def load(name: str) -> Image.Image:
 def paste_prop(scene: Image.Image, asset_id: str, x: int, ground_y: int) -> None:
     _, _, base_y = PROP_SPECS[asset_id]
     image = load(f"{asset_id}.png")
-    scene.alpha_composite(image, (x, ground_y - base_y))
+    scaled_size = tuple(round(value * VISUAL_SCALE) for value in image.size)
+    scaled = image.resize(scaled_size, Image.Resampling.NEAREST)
+    centered_x = round(x - (scaled.width - image.width) / 2)
+    scene.alpha_composite(
+        scaled,
+        (centered_x, ground_y - round(base_y * VISUAL_SCALE)),
+    )
 
 
 def paste_avatar(scene: Image.Image, x: int) -> None:
     sheet = Image.open(AVATAR).convert("RGBA")
     frame = sheet.crop((64 * 2, 0, 64 * 3, 96))
-    scene.alpha_composite(frame, (x, GROUND_Y - 96))
+    scaled_size = tuple(round(value * VISUAL_SCALE) for value in frame.size)
+    scaled = frame.resize(scaled_size, Image.Resampling.NEAREST)
+    scene.alpha_composite(scaled, (x, GROUND_Y - scaled.height))
 
 
 def build_scene(avatar_x: int) -> Image.Image:
@@ -54,7 +64,7 @@ def build_scene(avatar_x: int) -> Image.Image:
     scene.alpha_composite(load("far-01.png"), (0, 0))
     scene.alpha_composite(load("far-02.png"), (1906, 0))
     scene.alpha_composite(load("environment-01-v2.png"), (0, 0))
-    scene.alpha_composite(load("environment-02-v2.png"), (1906, -70))
+    scene.alpha_composite(load("environment-02-v3.png"), (1906, -54))
     scene.alpha_composite(load("ground-strip.png"), (0, 665))
     paste_avatar(scene, avatar_x)
     for prop in FRONT_PROPS:
