@@ -8,7 +8,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "backgrounds" / "bloomington-proof"
 FAR = ("far-01.png", "far-02.png")
-ENVIRONMENT = ("environment-01-v2.png", "environment-02-v2.png")
+ENVIRONMENT = ("environment-01-v2.png", "environment-02-v3.png")
 GROUND = "ground-strip.png"
 PROPS = {
     "bench.png": (150, 96),
@@ -38,6 +38,18 @@ def seam_scores(mask, slope):
         if valid.any():
             scores.append(float(mask[ys[valid], xs[valid]].mean()))
     return scores
+
+
+def opaque_bounds(image, box):
+    alpha = np.asarray(image.getchannel("A"))
+    left, top, right, bottom = box
+    ys, xs = np.nonzero(alpha[top:bottom, left:right] > 0)
+    return (
+        left + int(xs.min()),
+        top + int(ys.min()),
+        left + int(xs.max()),
+        top + int(ys.max()),
+    )
 
 
 class BloomingtonProofAssetTests(unittest.TestCase):
@@ -94,13 +106,26 @@ class BloomingtonProofAssetTests(unittest.TestCase):
         )
 
     def test_sample_gates_are_complete_inside_the_transition(self):
-        pixels = np.asarray(open_rgba("environment-02-v2.png"))
+        pixels = np.asarray(open_rgba("environment-02-v3.png"))
         alpha = pixels[:, :, 3] > 0
         left_gate = alpha[350:735, 260:520]
         right_gate = alpha[350:735, 580:840]
         self.assertGreater(float(left_gate.mean()), 0.25)
         self.assertGreater(float(right_gate.mean()), 0.25)
         self.assertLess(float(alpha[:500, :128].mean()), 0.05)
+
+    def test_grade_corrected_panel_preserves_gates_and_lowers_kirkwood(self):
+        source = open_rgba("environment-02-v2.png")
+        corrected = open_rgba("environment-02-v3.png")
+        source_gates = opaque_bounds(source, (128, 0, 815, 825))
+        fixed_gates = opaque_bounds(corrected, (128, 0, 815, 825))
+        source_kirkwood = opaque_bounds(source, (815, 0, 1906, 825))
+        fixed_kirkwood = opaque_bounds(corrected, (815, 0, 1906, 825))
+
+        self.assertEqual(fixed_gates[1] - 54, source_gates[1] - 70)
+        self.assertEqual(fixed_gates[3] - 54, source_gates[3] - 70)
+        self.assertEqual(fixed_kirkwood, source_kirkwood)
+        self.assertEqual(fixed_kirkwood[3] - 54, 665)
 
     def test_ground_is_opaque_and_uses_exact_geometry(self):
         image = open_rgba(GROUND)
