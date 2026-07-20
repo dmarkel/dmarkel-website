@@ -1,5 +1,5 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-8";
+import { ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-9";
 import { createInput } from "./input.js";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=bloomington-5";
 import { createCamera, stepCamera } from "./parallax.js";

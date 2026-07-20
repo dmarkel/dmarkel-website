@@ -24,6 +24,7 @@
 - Modify: `src/bloomington-foreground.js`
 - Modify: `src/bloomington-game.js`
 - Modify: `bloomington.html`
+- Modify: `tools/render_bloomington_proof_atlas.py`
 
 **Interfaces:**
 - Consumes: `PROPS`, `buildBloomingtonForeground()`, and revisioned Bloomington module URLs.
@@ -48,6 +49,7 @@ Delete only this manifest entry:
 ```
 
 Advance the HTML game URL and game-to-foreground import to `bloomington-9`. Leave bitmap cache revisions and all other manifest data unchanged.
+Delete the matching planter tuple from the review atlas so its visual evidence remains identical to runtime paint order.
 
 - [ ] **Step 4: Run focused and complete verification**
 

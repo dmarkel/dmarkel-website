@@ -28,7 +28,6 @@ PROP_SPECS = {
 FRONT_PROPS = (
     ("bench", 520, CURB_Y),
     ("campus-lamp", 930, CURB_Y),
-    ("planter", 1450, CURB_Y + 24),
     ("newspaper-box", 2250, CURB_Y),
     ("parking-meter", 2580, CURB_Y),
     ("bike-rack", 2910, CURB_Y),

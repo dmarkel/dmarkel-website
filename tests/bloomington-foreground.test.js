@@ -31,19 +31,22 @@ test("proof props partition exhaustively into back and curb depth", () => {
   assert.ok(scene.backProps.every(({ plane }) => plane === "back"));
   assert.ok(scene.frontProps.every(({ plane }) => plane === "curb"));
   assert.ok(PROPS.every(({ plane }) => plane === "curb"));
-  const planter = scene.frontProps.find(({ id }) => id === "campus-planter");
-  const otherCurbProps = scene.frontProps.filter(({ id }) => id !== "campus-planter");
-  assert.equal(planter.groundY, 789);
-  assert.ok(otherCurbProps.every(({ groundY }) => groundY === 765));
+  assert.ok(PROPS.every(({ id }) => id !== "campus-planter"));
+  assert.ok(scene.frontProps.every(({ assetId }) => assetId !== "planter"));
+  assert.ok(scene.frontProps.every(({ groundY }) => groundY === 765));
   assert.ok(scene.backProps.every(({ assetId }) => assetId !== "student-pair"));
   assert.ok(!Object.hasOwn(ASSETS, "student-pair"));
   assert.ok(PROPS.every(({ id }) => id !== "kelley-students"));
   for (const id of [
-    "bench", "campus-lamp", "planter", "newspaper-box",
+    "bench", "campus-lamp", "newspaper-box",
     "parking-meter", "bike-rack",
   ]) {
     assert.ok(scene.frontProps.some(({ assetId }) => assetId === id), id);
   }
+  assert.deepEqual(
+    scene.frontProps.map(({ id }) => id),
+    ["campus-bench", "campus-lamp", "kirkwood-news", "kirkwood-meter", "kirkwood-rack"],
+  );
 });
 
 test("every prop is grounded from its declared asset baseline", () => {

@@ -10,11 +10,11 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 chapter", html)
         self.assertIn("Kelley to Memorial Stadium.", html)
-        self.assertIn("bloomington-game.js?v=bloomington-8", html)
+        self.assertIn("bloomington-game.js?v=bloomington-9", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn('from "./bloomington-foreground.js?v=bloomington-8"', source)
+        self.assertIn('from "./bloomington-foreground.js?v=bloomington-9"', source)
         self.assertIn('from "./modular-foreground.js?v=bloomington-5"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
@@ -60,6 +60,10 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_curb_props_use_the_avatar_visual_scale(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
         self.assertIn("sceneY,\n      scale,", source)
+
+    def test_review_atlas_excludes_the_removed_flower_box(self):
+        source = (ROOT / "tools/render_bloomington_proof_atlas.py").read_text()
+        self.assertNotIn('(\"planter\", 1450', source)
 
     def test_avatar_is_painted_between_back_and_curb_props(self):
         source = (ROOT / "src/bloomington-game.js").read_text()
