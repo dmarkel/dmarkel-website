@@ -1,4 +1,4 @@
-import { CHICAGO } from './chicago-scene.js?v=chicago-1';
+import { CHICAGO } from './chicago-scene.js?v=chicago-2';
 import { ASSETS as HOUSTON_ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-8";
 import { ASSETS as BLOOMINGTON_ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-9";
 

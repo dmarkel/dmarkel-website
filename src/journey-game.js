@@ -11,7 +11,7 @@ import {
 } from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
-import { CHAPTERS } from "./chapters.js?v=chicago-1";
+import { CHAPTERS } from "./chapters.js?v=chicago-2";
 import { adjacentChapter } from "./journey.js";
 
 export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {

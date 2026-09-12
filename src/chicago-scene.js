@@ -1,7 +1,7 @@
-import { ART, GROUND, ASSETS as STREET_ASSETS } from './bloomington-foreground.js?v=bloomington-9';
+import { ART, GROUND } from './bloomington-foreground.js?v=bloomington-9';
 
 const ROOT = 'assets/backgrounds/chicago';
-const revision = name => `${ROOT}/${name}-v1.webp?v=chicago-1`;
+const revision = name => `${ROOT}/${name}-v1.webp?v=chicago-2`;
 export const CHICAGO_LANDMARKS = Object.freeze({
   airport: { panel: 0, name: "O’Hare International Airport" },
   park: { panel: 1, name: 'Lincoln Park' },
@@ -9,9 +9,9 @@ export const CHICAGO_LANDMARKS = Object.freeze({
 });
 export const CHICAGO_ASSETS = Object.freeze({
   apartment: { path: revision('apartment'), width: 374, height: 570, baseY: 569 },
-  bench: STREET_ASSETS.bench,
-  lamp: STREET_ASSETS['campus-lamp'],
-  rack: STREET_ASSETS['bike-rack'],
+  bench: { path: revision('bench'), width: 180, height: 77, baseY: 76 },
+  lamp: { path: revision('lamp'), width: 104, height: 299, baseY: 298 },
+  rack: { path: revision('rack'), width: 76, height: 96, baseY: 95 },
 });
 const planes = { back: 665, curb: 765 };
 const props = [
