@@ -1,3 +1,4 @@
+import { CHICAGO } from './chicago-scene.js?v=chicago-1';
 import { ASSETS as HOUSTON_ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-8";
 import { ASSETS as BLOOMINGTON_ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-9";
 
@@ -48,4 +49,5 @@ export const CHAPTERS = Object.freeze([
     layers: HOUSTON_LAYERS, assets: HOUSTON_ASSETS, foreground: buildHoustonForeground(), avatarScaledProps: false },
   { id: "bloomington", label: "Bloomington · Chapter 02", description: "Kelley School of Business to Memorial Stadium", art: ART,
     layers: BLOOMINGTON_LAYERS, assets: BLOOMINGTON_ASSETS, foreground: buildBloomingtonForeground(), avatarScaledProps: true },
+  CHICAGO,
 ]);

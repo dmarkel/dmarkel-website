@@ -22,7 +22,7 @@ test("chapter boundaries support both directions and future chapters", () => {
 });
 
 test("every journey scene references available art", () => {
-  assert.deepEqual(CHAPTERS.map(({ id }) => id), ["houston", "bloomington"]);
+  assert.deepEqual(CHAPTERS.map(({ id }) => id), ["houston", "bloomington", "chicago"]);
   for (const scene of CHAPTERS) {
     const paths = [...scene.layers.flatMap(({ paths }) => paths), scene.foreground.ground.path,
       ...Object.values(scene.assets).map(({ path }) => path)];
@@ -83,7 +83,15 @@ test("held keyboard and touch input cross chapters, fade, return, and survive re
     assert.ok(lastAvatar[4] < 50, 'arrives at Bloomington left edge');
     for (let i = 0; i < 60; i++) frame();
     assert.ok(lastAvatar[4] > 100, 'held right keeps walking after fade');
+    // Continue through Bloomington into Chicago, then return to Bloomington.
+    until(() => get('.eyebrow').textContent === CHAPTERS[2].label);
+    until(() => !transitioning());
+    for (let i = 0; i < 60; i++) frame();
     window.emit('keyup', { code: 'ArrowRight' });
+    window.emit('keydown', { code: 'ArrowLeft' });
+    until(() => get('.eyebrow').textContent === CHAPTERS[1].label);
+    until(() => !transitioning());
+    window.emit('keyup', { code: 'ArrowLeft' });
     get('#joystick').emit('pointerdown', { pointerId: 1, clientX: 0 });
     until(transitioning);
     window.innerWidth = 390; window.innerHeight = 844; window.emit('resize'); frame();
