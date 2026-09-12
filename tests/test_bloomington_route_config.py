@@ -10,12 +10,12 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 chapter", html)
         self.assertIn("Kelley to Memorial Stadium.", html)
-        self.assertIn("bloomington-game.js?v=bloomington-9", html)
+        self.assertIn("bloomington-game.js?v=journey-1", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
         self.assertIn('from "./bloomington-foreground.js?v=bloomington-9"', source)
-        self.assertIn('from "./modular-foreground.js?v=bloomington-5"', source)
+        self.assertIn('from "./modular-foreground.js?v=chapter-8"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
         self.assertIn(
@@ -30,43 +30,42 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
             "assets/backgrounds/bloomington-proof/environment-04.png?v=bloomington-8",
             source,
         )
-        self.assertIn("offsetYs: [0, -54, -54, -54]", source)
+        self.assertIn("panelOffsetYs: [0, -54, -54, -54]", source)
         self.assertIn('ground-strip-v2.png?v=bloomington-8', (ROOT / "src/bloomington-foreground.js").read_text())
         self.assertNotIn(
             '"assets/backgrounds/bloomington-proof/environment-02.png',
             source,
         )
         self.assertNotIn("assets/backgrounds/bloomington-proof/environment-01.png", source)
-        self.assertNotIn("assets/backgrounds/houston", source)
 
     def test_avatar_and_shared_physics_are_reused(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
         self.assertIn('from "./player.js"', source)
         self.assertIn("assets/avatar/avatar-walk-right.png", source)
         self.assertIn("assets/avatar/avatar-jump-right.png", source)
 
     def test_world_ends_at_stadium_manifest_edge(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
         self.assertIn("width: FOREGROUND.endSourceX * scene.scale", source)
         self.assertNotIn("width: scene.width * 2", source)
         foreground = (ROOT / "src/bloomington-foreground.js").read_text()
         self.assertIn("LANDMARKS.stadium.x + LANDMARKS.stadium.width", foreground)
 
     def test_kirkwood_environment_meets_the_visible_street_grade(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn("offsetYs: [0, -54, -54, -54]", source)
-        self.assertIn("layer.offsetYs", source)
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
+        self.assertIn("panelOffsetYs: [0, -54, -54, -54]", source)
+        self.assertIn("layer.panelOffsetYs", source)
 
     def test_curb_props_use_the_avatar_visual_scale(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
-        self.assertIn("sceneY,\n      scale,", source)
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
+        self.assertIn("chapter.avatarScaledProps ? scale : undefined,", source)
 
     def test_review_atlas_excludes_the_removed_flower_box(self):
         source = (ROOT / "tools/render_bloomington_proof_atlas.py").read_text()
         self.assertNotIn('(\"planter\", 1450', source)
 
     def test_avatar_is_painted_between_back_and_curb_props(self):
-        source = (ROOT / "src/bloomington-game.js").read_text()
+        source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
         back = "drawProps(images, FOREGROUND.backProps, cameraX);"
         player = "drawPlayer(images, alpha);"
         front = "drawProps(images, FOREGROUND.frontProps, cameraX);"

@@ -263,3 +263,10 @@ kbd {
     font-size: 25px;
   }
 }
+
+/* Keep the chapter transition title clear while retaining active controls. */
+.is-transitioning .masthead,
+.is-transitioning .instructions,
+.is-transitioning .status {
+  opacity: 0;
+}

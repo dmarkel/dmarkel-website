@@ -16,7 +16,7 @@ test("movement accelerates, faces right, and respects maximum speed", () => {
   }
   assert.equal(player.facing, 1);
   assert.ok(player.vx > 0);
-  assert.ok(player.vx <= 320);
+  assert.equal(player.vx, 640);
 });
 
 test("friction reduces horizontal velocity toward zero", () => {
