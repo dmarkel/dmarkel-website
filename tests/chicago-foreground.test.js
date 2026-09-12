@@ -10,6 +10,6 @@ test('Chicago foreground props use location-owned artwork and valid ground ancho
     assert.ok(fs.existsSync(asset.path.split('?')[0]));
     assert.equal(prop.baseY, asset.baseY);
     assert.ok(asset.baseY >= 0 && asset.baseY < asset.height);
-    assert.equal(prop.groundY, prop.plane === 'back' ? 665 : 765);
+    assert.equal(prop.groundY, prop.plane === 'back' ? 675 : 765);
   }
 });

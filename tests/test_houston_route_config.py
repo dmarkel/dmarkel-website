@@ -24,7 +24,7 @@ class HoustonRouteConfigTests(unittest.TestCase):
 
     def test_route_uses_chapter_8_cache_version(self):
         source = (ROOT / "houston.html").read_text()
-        self.assertIn("houston-game.js?v=chicago-2", source)
+        self.assertIn("houston-game.js?v=chicago-3", source)
 
     def test_changed_geometry_module_uses_chapter_8_cache_version(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()

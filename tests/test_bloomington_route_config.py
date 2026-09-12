@@ -10,7 +10,7 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 chapter", html)
         self.assertIn("Kelley to Memorial Stadium.", html)
-        self.assertIn("bloomington-game.js?v=chicago-2", html)
+        self.assertIn("bloomington-game.js?v=chicago-3", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()

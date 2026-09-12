@@ -1,7 +1,7 @@
 import { ART, GROUND } from './bloomington-foreground.js?v=bloomington-9';
 
 const ROOT = 'assets/backgrounds/chicago';
-const revision = name => `${ROOT}/${name}-v1.webp?v=chicago-2`;
+const revision = name => `${ROOT}/${name}-v1.webp?v=chicago-3`;
 export const CHICAGO_LANDMARKS = Object.freeze({
   airport: { panel: 0, name: "O’Hare International Airport" },
   park: { panel: 1, name: 'Lincoln Park' },
@@ -13,7 +13,8 @@ export const CHICAGO_ASSETS = Object.freeze({
   lamp: { path: revision('lamp'), width: 104, height: 299, baseY: 298 },
   rack: { path: revision('rack'), width: 76, height: 96, baseY: 95 },
 });
-const planes = { back: 665, curb: 765 };
+// Seat apartment foundations 10 source pixels into the pavement edge.
+const planes = { back: 675, curb: 765 };
 const props = [
   { id: 'park-west-bay', assetId: 'apartment', x: 3500, plane: 'back' },
   { id: 'park-west-flat', assetId: 'apartment', x: 3910, plane: 'back', mirror: true },
