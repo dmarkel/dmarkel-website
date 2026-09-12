@@ -11,10 +11,11 @@ import {
 } from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
-import { CHAPTERS } from "./chapters.js";
+import { CHAPTERS } from "./chapters.js?v=chicago-1";
 import { adjacentChapter } from "./journey.js";
 
-export function startJourney(initialChapter = 0) {
+export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
+  const CHAPTERS = sceneList;
   let chapterIndex = initialChapter;
   let chapter = CHAPTERS[chapterIndex];
   let { art: ART, layers: CHAPTER_LAYERS, assets: ASSETS, foreground: FOREGROUND } = chapter;
@@ -144,7 +145,9 @@ export function startJourney(initialChapter = 0) {
         cameraX,
         world.scale,
         sceneY,
-        chapter.avatarScaledProps ? scale : undefined,
+        prop.avatarScaleFactor !== undefined
+          ? scale * prop.avatarScaleFactor
+          : chapter.avatarScaledProps ? scale : undefined,
       );
       if (transform.x + transform.width < 0 || transform.x > viewport.width) continue;
       const image = images[`foreground-${prop.assetId}`];
@@ -172,11 +175,16 @@ export function startJourney(initialChapter = 0) {
     for (const layer of CHAPTER_LAYERS) {
       const factor = layer.name === "environment"
         ? endpointAlignedFactor(
-          ART.width * layer.paths.length * world.scale,
+          (layer.endSourceX ?? ART.width * layer.paths.length) * world.scale,
           viewport.width,
           world.width,
         )
         : layer.factor;
+      // Opaque far plates must also cover viewports wider than their native art.
+      // Scale both dimensions together; never stretch the bitmap horizontally.
+      const layerScale = layer.coverViewport
+        ? Math.max(world.scale, (viewport.width + Math.max(0, world.width - viewport.width) * factor) / (ART.width * layer.paths.length))
+        : world.scale;
       const transforms = layerPanelTransforms(
         cameraX,
         viewport.width,
@@ -185,7 +193,7 @@ export function startJourney(initialChapter = 0) {
         ART.width,
         ART.height,
         layer.paths.length,
-        world.scale,
+        layerScale,
         ART.groundLine,
         world.floorY,
         layer.panelOffsetYs,
