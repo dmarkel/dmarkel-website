@@ -1,5 +1,5 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { createInput } from "./input.js";
+import { createInput } from "./input.js?v=journey-4";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-8";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
@@ -11,7 +11,8 @@ import {
 } from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
-import { CHAPTERS } from "./chapters.js?v=chicago-3";
+import { CHAPTERS } from "./chapters.js?v=journey-4";
+import { createChapterMenu } from "./chapter-menu.js?v=journey-4";
 import { adjacentChapter } from "./journey.js";
 
 export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
@@ -32,6 +33,26 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
     joystick: document.querySelector("#joystick"),
     joystickKnob: document.querySelector("#joystick-knob"),
     jumpButton: document.querySelector("#jump-button"),
+  });
+
+  const chapterMenu = createChapterMenu(CHAPTERS, {
+    onOpenChange() { input.reset(); pendingJump = false; },
+    onSelect(index) {
+      canvas.setAttribute("tabindex", "-1");
+      canvas.focus();
+      if (!player || transition || index === chapterIndex) return;
+      input.reset();
+      pendingJump = false;
+      player.vx = 0;
+      player.vy = 0;
+      player.y = world.floorY - player.height;
+      player.grounded = true;
+      player.facing = 1;
+      transition = { nextIndex: index, direction: 1, elapsed: 0, entered: false };
+      stage.classList.add("is-transitioning");
+      status.textContent = `Entering ${CHAPTERS[index].label}`;
+      status.hidden = false;
+    },
   });
 
   function chapterImagePaths(scene) {
@@ -270,7 +291,7 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
   function updateChapterLabels() {
     document.title = `David — ${chapter.label}`;
     document.querySelector(".eyebrow").textContent = chapter.label;
-    document.querySelector("h1").textContent = "Walk it back.";
+    chapterMenu.setActive(chapterIndex);
     stage.setAttribute("aria-label", `Playable pixel journey through ${chapter.id}`);
     canvas.setAttribute("aria-label", `A pixel character walking from ${chapter.description}`);
   }
@@ -309,7 +330,9 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
     context.fillStyle = "#ffffff";
     context.textAlign = "center";
     context.font = `600 ${Math.min(30, viewport.width / 17)}px system-ui, sans-serif`;
-    context.fillText(CHAPTERS[transition.nextIndex].label, viewport.width / 2, viewport.height / 2);
+    const lines = CHAPTERS[transition.nextIndex].transitionTitle ?? [CHAPTERS[transition.nextIndex].label];
+    lines.forEach((line, i) => context.fillText(line, viewport.width / 2,
+      viewport.height / 2 + (i - (lines.length - 1) / 2) * 36));
     context.restore();
   }
 
@@ -324,7 +347,8 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
       accumulator += Math.min((time - lastTime) / 1000, 0.1);
       lastTime = time;
 
-      const frameInput = input.snapshot();
+      const rawInput = input.snapshot();
+      const frameInput = chapterMenu.isOpen() ? { move: 0, jumpPressed: false } : rawInput;
       if (frameInput.jumpPressed && !transition) pendingJump = true;
       if (frameInput.move !== 0 || frameInput.jumpPressed) dismissInstructions();
 
@@ -343,7 +367,7 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
             stage.classList.remove("is-transitioning");
             status.hidden = true;
           }
-        } else {
+        } else if (!chapterMenu.isOpen()) {
           const incomingVx = player.vx;
           player = stepPlayer(player, {
             move: frameInput.move,

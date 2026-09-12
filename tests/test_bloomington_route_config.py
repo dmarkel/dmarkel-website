@@ -9,8 +9,8 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
     def test_route_exists_and_uses_bloomington_cache_key(self):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 chapter", html)
-        self.assertIn("Kelley to Memorial Stadium.", html)
-        self.assertIn("bloomington-game.js?v=chicago-3", html)
+        self.assertIn("Kelley to Memorial Stadium chapter", html)
+        self.assertIn("bloomington-game.js?v=journey-4", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()

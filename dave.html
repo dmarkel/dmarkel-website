@@ -4,17 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#091d22">
-    <title>Dave — Houston, Bloomington & Chicago</title>
-    <link rel="stylesheet" href="styles.css?v=chicago-1">
+    <title>Dave — The Journey</title>
+    <link rel="stylesheet" href="styles.css?v=journey-4">
   </head>
   <body>
-    <main class="stage" aria-label="Playable pixel journey through Houston, Bloomington and Chicago">
+    <main class="stage" aria-label="Playable pixel journey through Houston, Bloomington, Chicago, St. Louis, Boston and Cincinnati">
       <canvas id="game" aria-label="A pixel character walking from Lamar High School through Houston to IAH"></canvas>
 
       <header class="masthead">
         <p class="eyebrow">Houston · Chapter 01</p>
-        <h1>Walk it back.</h1>
       </header>
+
+      <nav class="chapter-nav" aria-label="Chapters">
+        <button id="chapter-toggle" type="button" aria-label="Choose a chapter" aria-expanded="false" aria-controls="chapter-panel">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+        <div id="chapter-panel" hidden>
+          <p class="chapter-menu-title">Jump to chapter</p>
+          <div id="chapter-list"></div>
+        </div>
+      </nav>
 
       <aside id="instructions" class="instructions" aria-label="Controls">
         <span><kbd>←</kbd><kbd>→</kbd> walk</span>
@@ -34,6 +43,6 @@
         </button>
       </div>
     </main>
-    <script type="module" src="src/game.js?v=chicago-3"></script>
+    <script type="module" src="src/game.js?v=journey-4"></script>
   </body>
 </html>

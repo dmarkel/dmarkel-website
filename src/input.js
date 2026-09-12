@@ -25,7 +25,7 @@ export function createInput({ joystick, joystickKnob, jumpButton }) {
   const relevant = (code) => movementKeys.has(code) || jumpKeys.has(code);
 
   window.addEventListener("keydown", (event) => {
-    if (!relevant(event.code)) return;
+    if (!relevant(event.code) || (event.code === "Space" && event.target?.closest?.(".chapter-nav"))) return;
     event.preventDefault();
     keys.add(event.code);
     if (jumpKeys.has(event.code) && !event.repeat) jumpQueued = true;

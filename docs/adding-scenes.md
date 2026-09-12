@@ -1,6 +1,6 @@
 # Adding a journey scene
 
-The homepage, Houston page, and Bloomington page use the same runtime in `src/journey-game.js`. The entries in `CHAPTERS` in `src/chapters.js` define their travel order.
+The homepage and all chapter pages use the same runtime in `src/journey-game.js`. The entries in `CHAPTERS` in `src/chapters.js` define their travel order.
 
 To add the next destination:
 
@@ -14,4 +14,6 @@ Walking right at a chapter's end enters the next chapter at its left edge. Walki
 
 No new boundary or transition code is needed when appending a chapter. All chapter images currently preload before the journey begins, so each transition can run without a loading pause. For a substantially larger journey, consider changing this to preload neighboring chapters.
 
-Run `npm test` and `python -m unittest discover -s tests -p 'test_*route_config.py'` after making changes. The boundary tests cover a five-chapter journey as well as the current two chapters.
+Run `npm test` and `python -m unittest discover -s tests -p 'test_*route_config.py'` after making changes. The boundary tests cover a five-chapter journey as well as the current four chapters.
+
+The top-right chapter menu is generated from `CHAPTERS`; no HTML options need to be added when appending a scene. Provide an optional `transitionTitle` array for a long chapter label to wrap its fade title on mobile. Each new location must own its foreground furniture assets. Shared walking surfaces and source geometry may be reused to maintain continuity.

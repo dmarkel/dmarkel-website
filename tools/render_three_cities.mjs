@@ -6,7 +6,7 @@ const require = createRequire(`${process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES}
 const { createCanvas, Image: NativeImage } = require('@napi-rs/canvas');
 const root = path.resolve(import.meta.dirname, '..');
 process.chdir(root);
-const out = process.argv[2] ?? '/tmp/chicago-review';
+const out = process.argv[2] ?? '/tmp/three-cities-review';
 fs.mkdirSync(out, { recursive: true });
 const callbacks = new Map();
 let nextId = 0, time = 100;
@@ -29,7 +29,7 @@ globalThis.Image = class extends NativeImage { set src(value) { super.src=fs.rea
 globalThis.requestAnimationFrame = fn => { callbacks.set(++nextId,fn); return nextId; };
 globalThis.cancelAnimationFrame = id => callbacks.delete(id);
 const { startJourney } = await import('../src/journey-game.js');
-const { CHICAGO } = await import('../src/chicago-scene.js');
+const { THREE_CITIES: CHICAGO } = await import('../src/three-cities-scene.js');
 startJourney(0,[CHICAGO]);
 for(let i=0;i<100 && !get('#status').hidden;i++) await new Promise(resolve=>setTimeout(resolve,20));
 if(!get('#status').hidden) throw new Error(get('#status').textContent);
@@ -37,7 +37,7 @@ function frame() { time+=100; const batch=[...callbacks.values()]; callbacks.cle
 function save(name) { fs.writeFileSync(`${out}/${name}.png`,canvas.toBuffer('image/png')); }
 frame(); save('desktop-start');
 window.emit('keydown',{code:'ArrowRight'});
-for(let i=0;i<180;i++) { frame(); if(i===60)save('desktop-park'); if(i===110)save('downtown-arrival'); }
+for(let i=0;i<180;i++) { frame(); if(i%10===0)save('desktop-'+String(i).padStart(3,'0')); }
 window.emit('keyup',{code:'ArrowRight'});save('desktop-end');
 for(const [name,width,height] of [['portrait',390,844],['landscape',844,390],['portrait-return',390,844]]) {
   window.innerWidth=width;window.innerHeight=height;window.emit('resize');frame();frame();save(name);
