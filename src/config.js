@@ -1,7 +1,7 @@
 export const PHYSICS = Object.freeze({
-  acceleration: 1800,
-  friction: 2200,
-  maxSpeed: 320,
+  acceleration: 3600,
+  friction: 4400,
+  maxSpeed: 640,
   gravity: 2200,
   jumpSpeed: 800,
   coyoteTime: 0.1,
