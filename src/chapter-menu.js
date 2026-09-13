@@ -17,13 +17,13 @@ export function createChapterMenu(chapters, { onSelect, onOpenChange }) {
     list.appendChild(button);
     return button;
   });
-  function setOpen(value) {
+  function setOpen(value, restoreFocus = true) {
     open = value;
     panel.hidden = !open;
     toggle.setAttribute('aria-expanded', String(open));
     onOpenChange(open);
     if (open) buttons[active]?.focus();
-    else toggle.focus();
+    else if (restoreFocus) toggle.focus();
   }
   toggle.addEventListener('click', () => setOpen(!open));
   document.addEventListener('pointerdown', event => {
@@ -44,9 +44,15 @@ export function createChapterMenu(chapters, { onSelect, onOpenChange }) {
   document.addEventListener('keydown', event => {
     if (open && event.key === 'Escape') { event.preventDefault(); setOpen(false); }
   });
-  panel.addEventListener('focusout', () => queueMicrotask(() => {
-    if (open && !panel.contains(document.activeElement) && document.activeElement !== toggle) setOpen(false);
-  }));
+  // During blur, activeElement can briefly be <body> before the next button
+  // receives focus. Hiding the panel in a microtask cancels the pending click.
+  // relatedTarget identifies the real destination without that browser race.
+  panel.addEventListener('focusout', event => {
+    const destination = event.relatedTarget;
+    if (open && destination && !panel.contains(destination) && destination !== toggle) {
+      setOpen(false, false);
+    }
+  });
   return {
     isOpen: () => open,
     setActive(index) {

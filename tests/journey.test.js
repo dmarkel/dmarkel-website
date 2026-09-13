@@ -72,6 +72,7 @@ test("held keyboard and touch input cross chapters, fade, return, and survive re
     globalThis.requestAnimationFrame = fn => { callbacks.set(++nextId, fn); return nextId; };
     globalThis.cancelAnimationFrame = id => callbacks.delete(id);
     const { startJourney } = await import('../src/journey-game.js');
+    get('#chapter-panel').appendChild(get('#chapter-list'));
     startJourney();
     await new Promise(resolve => setImmediate(resolve));
     function frame() { time += 1000 / 60; const batch = [...callbacks.values()]; callbacks.clear(); batch.forEach(fn => fn(time)); }
@@ -125,6 +126,12 @@ test("held keyboard and touch input cross chapters, fade, return, and survive re
     assert.equal(lastAvatar[4], pausedX, 'movement pauses while choosing a chapter');
     panel.emit('keydown', { key: 'End' });
     assert.equal(document.activeElement, choices[3]);
+    // Browsers briefly expose body as activeElement during button-to-button
+    // focus changes. The pending pointer click must not lose its target.
+    document.activeElement = get('body');
+    panel.emit('focusout', { relatedTarget: choices[3] });
+    await Promise.resolve();
+    assert.equal(panel.hidden, false, 'focus change must not swallow chapter click');
     choices[3].emit('click');
     assert.equal(panel.hidden, true);
     until(() => get('.eyebrow').textContent === CHAPTERS[3].label);

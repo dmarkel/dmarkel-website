@@ -1,5 +1,5 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { createInput } from "./input.js?v=journey-4";
+import { createInput } from "./input.js?v=journey-5";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-8";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
@@ -11,8 +11,8 @@ import {
 } from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
-import { CHAPTERS } from "./chapters.js?v=journey-4";
-import { createChapterMenu } from "./chapter-menu.js?v=journey-4";
+import { CHAPTERS } from "./chapters.js?v=journey-5";
+import { createChapterMenu } from "./chapter-menu.js?v=journey-5";
 import { adjacentChapter } from "./journey.js";
 
 export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
@@ -40,7 +40,7 @@ export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {
     onSelect(index) {
       canvas.setAttribute("tabindex", "-1");
       canvas.focus();
-      if (!player || transition || index === chapterIndex) return;
+      if (!player || transition || !CHAPTERS[index]) return;
       input.reset();
       pendingJump = false;
       player.vx = 0;

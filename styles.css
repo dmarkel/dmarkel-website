@@ -288,7 +288,9 @@ kbd {
   margin-left: auto;
   border: 1px solid rgba(244, 234, 215, .35);
   border-radius: 10px;
-  background: rgba(9, 29, 34, .88);
+  background: rgba(9, 29, 34, .3);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -302,8 +304,10 @@ kbd {
   border: 1px solid rgba(244, 234, 215, .25);
   border-radius: 12px;
   color: var(--paper);
-  background: rgba(9, 29, 34, .97);
-  box-shadow: 0 12px 36px #0005;
+  background: rgba(9, 29, 34, .48);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px #091d2226;
 }
 #chapter-panel[hidden] { display: none; }
 .chapter-menu-title { margin: 2px 8px 10px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); }
