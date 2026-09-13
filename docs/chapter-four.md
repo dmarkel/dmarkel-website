@@ -2,7 +2,7 @@
 
 Route: Gateway Arch and Old Courthouse riverfront → Beacon Hill and the State House dome → Roebling Bridge and Cincinnati riverfront. No airport. This is one combined chapter following Chicago, with bidirectional boundary travel and direct chapter selection.
 
-Art follows the shared 1906 × 825 coordinate system, ground line 735, continuous ground at 665, and curb props at 765. New location furniture is isolated transparent artwork: a St. Louis fleur-de-lis bench, a Boston gas-style lantern, and a Cincinnati river-pattern flower planter. Furniture is confined to its city's part of the route. The independently authored sky moves at 12%; environment movement uses the runtime's endpoint-aligned factor; foreground moves at camera speed. Cincinnati's river edge overlaps the pavement by 40 source pixels to avoid exposed sky beneath the shoreline.
+Art follows the shared 1906 × 825 coordinate system, ground line 735, continuous ground at 665, and curb props at 765. New location furniture is isolated transparent artwork: a St. Louis fleur-de-lis bench, a Boston gas-style lantern, and a Cincinnati river-pattern flower planter. Furniture is confined to its city's part of the route. The independently authored far panorama includes sky, distant rooftops and tree canopy. Its target motion is 12%, capped by available image overscan on wider screens instead of enlarging cloud pixels. Environment movement uses the runtime's endpoint-aligned factor; foreground moves at camera speed. All three replacement environment plates meet the pavement at source y=665.
 
 Artwork lives in `assets/backgrounds/three-cities/`. Production images were generated with the built-in image-generation tool, normalized to binary alpha, trimmed and resized proportionally using nearest-neighbor sampling. The environment plates are positioned at the shared baseline without stretching. Foreground metadata is in `src/three-cities-assets.js`.
 
@@ -12,7 +12,7 @@ Every playable route includes a top-right hamburger button and chapter panel. Bu
 
 ## Verification
 
-`npm test` covers all chapter asset paths, natural forward/backward travel into Chapter 04, direct menu jumps, paused motion, Escape, outside dismissal, focus and selected state. The Python route configuration tests check entry pages. `node tools/render_three_cities.mjs` renders a complete desktop traversal plus portrait, landscape and rotate-back endpoint views using the actual Canvas runtime. Chromium could not be downloaded in the build environment, so full-browser visual and touch-device checks remain unverified.
+`npm test` covers all chapter asset paths, natural forward/backward travel into Chapter 04, direct menu jumps, paused motion, Escape, outside dismissal, focus and selected state. The Python route configuration tests check entry pages. `node tools/render_three_cities.mjs` renders a complete desktop traversal plus portrait, landscape and rotate-back endpoint views using the actual Canvas runtime. The chapter-menu repair was verified in the connected Chrome browser: pointer clicks reached Chicago and Chapter 04, and the original focus race has a regression test. Native phone hardware remains unverified.
 
 ## Generation prompts
 
@@ -45,3 +45,21 @@ Use case: stylized-concept. One isolated Boston Beacon Hill historic gas-style s
 Use case: stylized-concept. One isolated Cincinnati riverfront ornamental planter: low wide terracotta red rectangular metal trough on two short dark feet, subtle embossed flowing Ohio River wave decoration, dense bright green foliage and white and red flowers. Detailed crisp 16-bit pixel art warm daylight, straight frontal view, slight top visible. Complete object, genuine transparent background and gaps, no ground, shadow, scenery or text.
 
 Cincinnati was regenerated to keep both bridge approaches inside the panel and retain actual transparent sky; a checkerboard-background candidate was discarded.
+
+## Far-layer and menu repair
+
+The initial empty sky plate is superseded by `far-v2.webp` (2172 × 724). The replacement is one independently generated panorama using the approved Chicago and Bloomington far plates as style references. It adds a finely detailed distant city, rooftops, tree canopy and rolling hills beneath small restrained clouds. The skyline is combined with newly rebuilt environment landmarks and retained location-specific props. No existing scene was cut apart to invent a moving layer.
+
+`farLayerGeometry` preserves the asset's real aspect ratio and authored pixel density. It scales only with the scene or to fit a viewport wider than the artwork, and limits camera travel to the remaining overscan. Coverage tests check start, middle and end positions at portrait, landscape, desktop and wide-desktop sizes. This avoids the old technique of enlarging a single sky to cover both the viewport and all future camera motion.
+
+The menu uses the same 30% dark tint and 7px backdrop blur as the game controls; the panel uses a 48% tint for legible labels. The focusout handler uses `relatedTarget`, not a microtask reading the temporarily unfocused document, so focusing another chapter button does not hide it before its click fires. Selecting the current chapter restarts it at its beginning.
+
+Replacement prompt: match the attached approved far artwork's fine-detail cartoon pixel illustration and blue-green daylight palette; one opaque panoramic far layer with sparse small wispy clouds, distant low-contrast office buildings and warm brick roofs, deciduous tree canopy, and rolling Ohio hills to the right; no foreground architecture, pavement, people or props; no duplicated Arch, State House or Roebling Bridge; fill every edge. Generated with the built-in image-generation tool and saved losslessly without resizing.
+
+## Chicago-reference environment rebuild
+
+The user requested recreation of the complete combined scene. All three environment plates now use version 2, generated with Chicago’s approved `park-v1.webp` as a direct style reference: fine illustrated pixel detail, warm yellow light, rich blue-green shadows, lush foliage, and crisp architectural outlines. The route remains the complete Gateway Arch and Old Courthouse → Beacon Hill and State House → complete Roebling Bridge and Cincinnati architecture, with no airport.
+
+Each plate was authored independently from the opaque far panorama. Generated checkerboard backgrounds were rejected; a targeted built-in image-generation edit replaced the background with flat magenta. The repository’s connected chroma extraction removes the key, including enclosed bridge and Arch gaps, and despills edges. Entire visible bounds are scaled proportionally using nearest-neighbor sampling and seated at y=665 on a 1906×825 transparent plate, with no landmark cropping.
+
+Prompt set: match the Chicago reference style exactly; generate the specified city’s complete landmarks, frontal elevation, flat common baseline, low garden transition edges; exclude sky, foreground pavement, close props, people, cars and airports. Background correction prompt: change only the checkerboard to uniform #FF00FF, including enclosed gaps; preserve artwork and all placement and detail. Built-in image generation was used. Final production files are `st-louis-v2.webp`, `boston-v2.webp`, `cincinnati-v2.webp` and `far-v2.webp` in `assets/backgrounds/three-cities/`.
