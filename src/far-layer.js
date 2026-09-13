@@ -1,4 +1,4 @@
-import { endpointAlignedFactor } from './scene-geometry.js?v=chapter-8';
+import { endpointAlignedFactor } from './scene-geometry.js?v=chapter-9';
 
 // Preserve authored pixel density. On wide screens, reduce distant travel to
 // available overscan instead of magnifying the sky to cover the entire walk.

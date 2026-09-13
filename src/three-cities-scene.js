@@ -1,7 +1,7 @@
 import { ART, GROUND } from './bloomington-foreground.js?v=bloomington-9';
 import { CITY_ASSETS } from './three-cities-assets.js?v=journey-4';
 
-const path = name => `assets/backgrounds/three-cities/${name}-v2.webp?v=journey-8`;
+const path = name => `assets/backgrounds/three-cities/${name}-v2.webp?v=journey-9`;
 // Shared paving joins the cities; furniture belongs only to its own location.
 const props = [
   ...[700, 1900, 3050].map((x, i) => ({ id: `st-louis-bench-${i}`, assetId: 'st-louis-bench', x })),
@@ -17,7 +17,7 @@ export const THREE_CITIES = Object.freeze({
   description: 'the St. Louis riverfront through Beacon Hill to the Cincinnati riverfront',
   art: ART,
   layers: [
-    { name: 'far', paths: ['assets/backgrounds/three-cities/far-v2.webp?v=journey-8'],
+    { name: 'far', paths: ['assets/backgrounds/three-cities/far-v2.webp?v=journey-9'],
       width: 2172, height: 724, factor: 0.12, preserveDetail: true },
     { name: 'environment', paths: [path('st-louis'), path('boston'), path('cincinnati')], factor: 0.38, panelOffsetYs: [0, 0, 0] },
   ],

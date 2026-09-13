@@ -1,4 +1,4 @@
-import { expandFenceRun } from "./modular-foreground.js?v=chapter-8";
+import { expandFenceRun } from "./modular-foreground.js?v=chapter-9";
 
 const ROOT = "assets/backgrounds/houston-modular";
 
@@ -21,7 +21,7 @@ export const ASSETS = Object.freeze({
   "chain-end": { path: `${ROOT}/chain-end.png`, width: 98, height: 200, baseY: 199 },
   planter: { path: `${ROOT}/planter.png`, width: 124, height: 97, baseY: 96 },
   cabinet: { path: `${ROOT}/cabinet.png`, width: 113, height: 113, baseY: 112 },
-  bench: { path: `${ROOT}/bench.png`, width: 159, height: 98, baseY: 97 },
+  bench: { path: `${ROOT}/bench-v2.png?v=houston-2`, width: 159, height: 98, baseY: 97 },
   "bike-rack": { path: `${ROOT}/bike-rack.png`, width: 58, height: 85, baseY: 84 },
   bollards: { path: `${ROOT}/bollards.png`, width: 169, height: 87, baseY: 86 },
   "street-lamp": { path: `${ROOT}/street-lamp.png`, width: 68, height: 167, baseY: 166 },
@@ -33,19 +33,20 @@ export const OLD_BOUNDARIES = Object.freeze([1906, 3812, 5718]);
 
 export const FENCE_RUNS = Object.freeze([
   { id: "lamar", type: "iron", startX: 80, endX: 3200, gateX: 760, plane: "back" },
-  { id: "airport", type: "chain", startX: 4700, endX: 6250, plane: "back" },
+  { id: "airport", type: "chain", startX: 4700, endX: 6450, plane: "back" },
 ]);
 
 export const PROPS = Object.freeze([
   { id: "middle-verge", assetId: "middle-verge", x: 3200, plane: "back" },
   { id: "open-planter-a", assetId: "planter", x: 3300, plane: "walk" },
-  { id: "open-lamp-a", assetId: "street-lamp", x: 3430, plane: "walk" },
-  { id: "open-bench", assetId: "bench", x: 3600, plane: "walk" },
-  { id: "open-lamp-b", assetId: "street-lamp", x: 3920, plane: "walk" },
+  { id: "open-lamp-a", assetId: "street-lamp", x: 3430, plane: "walk", avatarScaleFactor: 0.82 },
+  { id: "open-bench", assetId: "bench", x: 3600, plane: "walk", avatarScaleFactor: 0.82 },
+  { id: "open-lamp-b", assetId: "street-lamp", x: 3920, plane: "walk", avatarScaleFactor: 0.82 },
   { id: "open-cabinet", assetId: "cabinet", x: 4070, plane: "walk" },
   { id: "open-bike-rack", assetId: "bike-rack", x: 4260, plane: "walk" },
   { id: "open-bollards", assetId: "bollards", x: 4420, plane: "walk" },
   { id: "open-planter-b", assetId: "planter", x: 4580, plane: "walk", mirror: true },
+  { id: "airport-arrival-bollards", assetId: "bollards", x: 6270, plane: "walk", avatarScaleFactor: 0.78 },
   { id: "airport-terminal", assetId: "terminal", x: 6450, plane: "back" },
 ]);
 

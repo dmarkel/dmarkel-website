@@ -39,6 +39,14 @@ test("iron and chain fences are separated by an intentional open span", () => {
   assert.ok(chain.startX - iron.endX >= 900);
   assert.equal(iron.gateX, 760);
   assert.equal(chain.gateX, undefined);
+  assert.equal(chain.endX, 6450, "airport fence meets the terminal entrance");
+});
+
+test("close Houston furniture is scaled against the avatar", () => {
+  const closeProps = PROPS.filter(({ assetId }) => ["bench", "street-lamp"].includes(assetId));
+  assert.ok(closeProps.length >= 3);
+  assert.ok(closeProps.every(({ avatarScaleFactor }) => avatarScaleFactor >= 0.8));
+  assert.ok(PROPS.some(({ id }) => id === "airport-arrival-bollards"));
 });
 
 test("structural props use the back plane and street props use the walking plane", () => {

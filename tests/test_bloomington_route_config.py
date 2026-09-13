@@ -10,12 +10,12 @@ class BloomingtonRouteConfigTests(unittest.TestCase):
         html = (ROOT / "bloomington.html").read_text()
         self.assertIn("Bloomington · 2007 chapter", html)
         self.assertIn("Kelley to Memorial Stadium chapter", html)
-        self.assertIn("bloomington-game.js?v=journey-8", html)
+        self.assertIn("bloomington-game.js?v=journey-9", html)
 
     def test_game_uses_only_bloomington_scene_art(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
         self.assertIn('from "./bloomington-foreground.js?v=bloomington-9"', source)
-        self.assertIn('from "./modular-foreground.js?v=chapter-8"', source)
+        self.assertIn('from "./modular-foreground.js?v=chapter-9"', source)
         self.assertIn("assets/backgrounds/bloomington-proof/far-01.png", source)
         self.assertIn("assets/backgrounds/bloomington-proof/environment-01-v2.png", source)
         self.assertIn(

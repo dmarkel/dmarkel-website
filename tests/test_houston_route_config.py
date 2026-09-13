@@ -11,7 +11,7 @@ class HoustonRouteConfigTests(unittest.TestCase):
 
     def test_route_imports_modular_foreground(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
-        self.assertIn('from "./houston-foreground.js?v=chapter-8"', source)
+        self.assertIn('from "./houston-foreground.js?v=chapter-9"', source)
 
     def test_route_no_longer_loads_baked_foreground_panels(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
@@ -24,11 +24,11 @@ class HoustonRouteConfigTests(unittest.TestCase):
 
     def test_route_uses_chapter_8_cache_version(self):
         source = (ROOT / "houston.html").read_text()
-        self.assertIn("houston-game.js?v=journey-8", source)
+        self.assertIn("houston-game.js?v=journey-9", source)
 
     def test_changed_geometry_module_uses_chapter_8_cache_version(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()
-        self.assertIn('from "./scene-geometry.js?v=chapter-8"', source)
+        self.assertIn('from "./scene-geometry.js?v=chapter-9"', source)
 
     def test_route_uses_road_free_airport_environment(self):
         source = (ROOT / "src/chapters.js").read_text() + (ROOT / "src/journey-game.js").read_text()

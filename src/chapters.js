@@ -1,7 +1,7 @@
-import { THREE_CITIES } from './three-cities-scene.js?v=journey-8';
+import { THREE_CITIES } from './three-cities-scene.js?v=journey-9';
 import { AUSTIN } from './austin-scene.js?v=austin-1';
 import { CHICAGO } from './chicago-scene.js?v=chicago-3';
-import { ASSETS as HOUSTON_ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-8";
+import { ASSETS as HOUSTON_ASSETS, buildHoustonForeground } from "./houston-foreground.js?v=chapter-9";
 import { ASSETS as BLOOMINGTON_ASSETS, ART, buildBloomingtonForeground } from "./bloomington-foreground.js?v=bloomington-9";
 
 const HOUSTON_LAYERS = Object.freeze([
