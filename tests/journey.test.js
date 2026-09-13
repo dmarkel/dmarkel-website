@@ -22,7 +22,7 @@ test("chapter boundaries support both directions and future chapters", () => {
 });
 
 test("every journey scene references available art", () => {
-  assert.deepEqual(CHAPTERS.map(({ id }) => id), ["houston", "bloomington", "chicago", "three-cities"]);
+  assert.deepEqual(CHAPTERS.map(({ id }) => id), ["houston", "bloomington", "chicago", "three-cities", "austin"]);
   for (const scene of CHAPTERS) {
     const paths = [...scene.layers.flatMap(({ paths }) => paths), scene.foreground.ground.path,
       ...Object.values(scene.assets).map(({ path }) => path)];
@@ -90,14 +90,18 @@ test("held keyboard and touch input cross chapters, fade, return, and survive re
     assert.ok(lastAvatar[4] < 50, 'arrives at Bloomington left edge');
     for (let i = 0; i < 60; i++) frame();
     assert.ok(lastAvatar[4] > 100, 'held right keeps walking after fade');
-    // Walk naturally through Chicago into Chapter 04 and return through both boundaries.
+    // Walk naturally through Chicago and Chapter 04 into Austin, then return.
     until(() => get('.eyebrow').textContent === CHAPTERS[2].label);
     until(() => !transitioning());
     until(() => get('.eyebrow').textContent === CHAPTERS[3].label);
     until(() => !transitioning());
+    until(() => get('.eyebrow').textContent === CHAPTERS[4].label);
+    until(() => !transitioning());
     for (let i = 0; i < 60; i++) frame();
     window.emit('keyup', { code: 'ArrowRight' });
     window.emit('keydown', { code: 'ArrowLeft' });
+    until(() => get('.eyebrow').textContent === CHAPTERS[3].label);
+    until(() => !transitioning());
     until(() => get('.eyebrow').textContent === CHAPTERS[2].label);
     until(() => !transitioning());
     until(() => get('.eyebrow').textContent === CHAPTERS[1].label);
@@ -125,18 +129,18 @@ test("held keyboard and touch input cross chapters, fade, return, and survive re
     for (let i = 0; i < 60; i++) frame();
     assert.equal(lastAvatar[4], pausedX, 'movement pauses while choosing a chapter');
     panel.emit('keydown', { key: 'End' });
-    assert.equal(document.activeElement, choices[3]);
+    assert.equal(document.activeElement, choices[4]);
     // Browsers briefly expose body as activeElement during button-to-button
     // focus changes. The pending pointer click must not lose its target.
     document.activeElement = get('body');
-    panel.emit('focusout', { relatedTarget: choices[3] });
+    panel.emit('focusout', { relatedTarget: choices[4] });
     await Promise.resolve();
     assert.equal(panel.hidden, false, 'focus change must not swallow chapter click');
-    choices[3].emit('click');
+    choices[4].emit('click');
     assert.equal(panel.hidden, true);
-    until(() => get('.eyebrow').textContent === CHAPTERS[3].label);
+    until(() => get('.eyebrow').textContent === CHAPTERS[4].label);
     until(() => !transitioning());
-    assert.equal(choices[3].attributes['aria-current'], 'location');
+    assert.equal(choices[4].attributes['aria-current'], 'location');
     for (let i = 0; i < 60; i++) frame();
     assert.ok(lastAvatar[4] < 50, 'menu arrival starts grounded at left without stale movement');
     toggle.emit('click');

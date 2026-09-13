@@ -1,5 +1,5 @@
 import { FIXED_STEP, SPRITES } from "./config.js";
-import { createInput } from "./input.js?v=journey-7";
+import { createInput } from "./input.js?v=journey-8";
 import { groundTileTransforms, propTransform } from "./modular-foreground.js?v=chapter-8";
 import { createCamera, stepCamera } from "./parallax.js";
 import { createPlayer, selectAnimation, stepPlayer } from "./player.js";
@@ -11,9 +11,9 @@ import {
 } from "./scene-geometry.js?v=chapter-8";
 import { applyViewport, readViewport } from "./viewport.js";
 
-import { CHAPTERS } from "./chapters.js?v=journey-7";
-import { createChapterMenu } from "./chapter-menu.js?v=journey-7";
-import { farLayerGeometry } from "./far-layer.js?v=journey-7";
+import { CHAPTERS } from "./chapters.js?v=journey-8";
+import { createChapterMenu } from "./chapter-menu.js?v=journey-8";
+import { farLayerGeometry } from "./far-layer.js?v=journey-8";
 import { adjacentChapter } from "./journey.js";
 
 export function startJourney(initialChapter = 0, sceneList = CHAPTERS) {

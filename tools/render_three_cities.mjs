@@ -29,8 +29,12 @@ globalThis.Image = class extends NativeImage { set src(value) { super.src=fs.rea
 globalThis.requestAnimationFrame = fn => { callbacks.set(++nextId,fn); return nextId; };
 globalThis.cancelAnimationFrame = id => callbacks.delete(id);
 const { startJourney } = await import('../src/journey-game.js');
-const { THREE_CITIES: CHICAGO } = await import('../src/three-cities-scene.js');
-startJourney(0,[CHICAGO]);
+const sceneModule = process.argv[3] ?? '../src/three-cities-scene.js';
+const sceneExport = process.argv[4] ?? 'THREE_CITIES';
+const module = await import(sceneModule);
+const scene = module[sceneExport];
+if (!scene) throw new Error(`Missing scene export ${sceneExport} in ${sceneModule}`);
+startJourney(0, [scene]);
 for(let i=0;i<100 && !get('#status').hidden;i++) await new Promise(resolve=>setTimeout(resolve,20));
 if(!get('#status').hidden) throw new Error(get('#status').textContent);
 function frame() { time+=100; const batch=[...callbacks.values()]; callbacks.clear(); batch.forEach(fn=>fn(time)); }

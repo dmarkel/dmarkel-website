@@ -1,3 +1,3 @@
-import { startJourney } from "./journey-game.js?v=journey-7";
+import { startJourney } from "./journey-game.js?v=journey-8";
 
 startJourney(2);
